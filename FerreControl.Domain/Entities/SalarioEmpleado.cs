@@ -23,5 +23,7 @@ public class SalarioEmpleado
     public bool Estado { get; set; } = true;
 
     public Empleado Empleado { get; set; } = null!;
+    public ICollection<NominaDetalle> NominasDetalle { get; set; }
+    = new List<NominaDetalle>();
 }
 

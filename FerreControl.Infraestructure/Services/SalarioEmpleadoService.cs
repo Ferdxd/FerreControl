@@ -1,5 +1,6 @@
 ﻿using FerreControl.Application.DTOs.Salarios;
-using FerreControl.Application.Interfaces;
+using FerreControl.Application.Interfaces.IRepository;
+using FerreControl.Application.Interfaces.IService;
 using FerreControl.Domain.Entities;
 using Microsoft.VisualBasic;
 using System;
@@ -26,7 +27,7 @@ namespace FerreControl.Infraestructure.Services
             var salario = await _salarioRepository.ObtenerActualAsync(idEmpleado);
             if (salario == null)
             {
-                throw new InvalidOperationException("No existen registros");
+                return null;
             }
 
             return new SalarioEmpleadoDto

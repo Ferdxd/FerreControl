@@ -1,0 +1,232 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.Forms.PagoNominaFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registrar pago"
+        Width="560"
+        Height="720"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="28">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+
+        <StackPanel>
+
+            <TextBlock
+                Text="Registrar pago"
+                Foreground="White"
+                FontSize="24"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                x:Name="txtEmpleado"
+                Foreground="{StaticResource TextSecondaryBrush}"
+                Margin="0,7,0,0"/>
+
+        </StackPanel>
+
+
+        <!-- RESUMEN -->
+
+        <Border
+            Grid.Row="1"
+            Style="{StaticResource CardStyle}"
+            Margin="0,22,0,18">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*"/>
+
+                    <ColumnDefinition Width="*"/>
+
+                    <ColumnDefinition Width="*"/>
+
+                </Grid.ColumnDefinitions>
+
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="TOTAL"
+                        Foreground="#64748B"
+                        FontSize="10"/>
+
+                    <TextBlock
+                        x:Name="txtTotal"
+                        Text="Q 0.00"
+                        Foreground="White"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+
+                <StackPanel Grid.Column="1">
+
+                    <TextBlock
+                        Text="PAGADO"
+                        Foreground="#64748B"
+                        FontSize="10"/>
+
+                    <TextBlock
+                        x:Name="txtPagado"
+                        Text="Q 0.00"
+                        Foreground="{StaticResource SuccessBrush}"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+
+                <StackPanel Grid.Column="2">
+
+                    <TextBlock
+                        Text="PENDIENTE"
+                        Foreground="#64748B"
+                        FontSize="10"/>
+
+                    <TextBlock
+                        x:Name="txtPendiente"
+                        Text="Q 0.00"
+                        Foreground="{StaticResource WarningBrush}"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- FORMULARIO -->
+
+        <Border
+            Grid.Row="2"
+            Style="{StaticResource CardStyle}">
+
+            <StackPanel>
+
+
+                <TextBlock
+                    Text="MONTO"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <TextBox
+                    x:Name="txtMonto"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,0,18"/>
+
+
+                <TextBlock
+                    Text="FECHA DE PAGO"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <DatePicker
+                    x:Name="dpFechaPago"
+                    Style="{StaticResource ModernDatePickerStyle}"
+                    Margin="0,0,0,18"/>
+
+
+                <TextBlock
+                    Text="MÉTODO"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <ComboBox
+                    x:Name="cmbMetodo"
+                    Style="{StaticResource ModernComboBoxStyle}"
+                    Margin="0,0,0,18">
+
+                    <ComboBoxItem Content="EFECTIVO"/>
+
+                    <ComboBoxItem Content="TRANSFERENCIA"/>
+
+                    <ComboBoxItem Content="DEPOSITO"/>
+
+                    <ComboBoxItem Content="OTRO"/>
+
+                </ComboBox>
+
+
+                <TextBlock
+                    Text="REFERENCIA"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <TextBox
+                    x:Name="txtReferencia"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,0,18"/>
+
+
+                <TextBlock
+                    Text="OBSERVACIÓN"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <TextBox
+                    x:Name="txtObservacion"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Height="70"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"/>
+
+            </StackPanel>
+
+        </Border>
+
+
+        <StackPanel
+            Grid.Row="3"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="0,22,0,0">
+
+            <Button
+                Content="Cancelar"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Margin="0,0,12,0"
+                Click="BtnCancelar_Click"/>
+
+            <Button
+                x:Name="btnGuardar"
+                Content="Registrar pago"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Click="BtnGuardar_Click"/>
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

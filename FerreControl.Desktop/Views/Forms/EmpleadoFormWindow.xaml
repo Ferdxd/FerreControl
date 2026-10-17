@@ -1,0 +1,176 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.Forms.EmpleadoFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Empleado"
+        Width="600"
+        Height="640"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="30">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+
+        <!-- CABECERA -->
+
+        <StackPanel>
+
+            <TextBlock
+                x:Name="txtTitulo"
+                Text="Nuevo empleado"
+                Style="{StaticResource PageTitleStyle}"/>
+
+            <TextBlock
+                x:Name="txtSubtitulo"
+                Text="Ingresa los datos generales del empleado."
+                Foreground="{StaticResource TextSecondaryBrush}"
+                Margin="0,6,0,0"/>
+
+        </StackPanel>
+
+
+        <!-- FORMULARIO -->
+
+        <Border
+            Grid.Row="1"
+            Style="{StaticResource CardStyle}"
+            Margin="0,25,0,20">
+
+            <ScrollViewer
+                VerticalScrollBarVisibility="Auto">
+
+                <StackPanel>
+
+
+                    <TextBlock
+                        Text="Negocio ID"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtNegocioID"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,0,0,15"/>
+
+
+                    <TextBlock
+                        Text="Código"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtCodigo"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,0,0,15"/>
+
+
+                    <TextBlock
+                        Text="Nombres"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtNombres"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,0,0,15"/>
+
+
+                    <TextBlock
+                        Text="Apellidos"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtApellidos"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,0,0,15"/>
+
+
+                    <TextBlock
+                        Text="Teléfono"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtTelefono"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,0,0,15"/>
+
+
+                    <TextBlock
+                        Text="Puesto"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtPuesto"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,0,0,15"/>
+                    <TextBlock
+                    Text="Fecha de ingreso"
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    Margin="0,0,0,6"/>
+
+                    <DatePicker
+                    x:Name="dpFechaIngreso"
+                    Style="{StaticResource ModernDatePickerStyle}"
+                    Margin="0,0,0,15"/>
+
+                    <CheckBox
+                        x:Name="chkEstado"
+                        Content="Empleado activo"
+                        Foreground="White"
+                        FontSize="14"
+                        Visibility="Collapsed"/>
+
+                </StackPanel>
+
+            </ScrollViewer>
+
+        </Border>
+
+
+        <!-- BOTONES -->
+
+        <Grid Grid.Row="2">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="12"/>
+
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+
+
+            <Button
+                Grid.Column="0"
+                Content="Cancelar"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="BtnCancelar_Click"/>
+
+
+            <Button
+                x:Name="btnGuardar"
+                Grid.Column="2"
+                Content="Guardar empleado"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Click="BtnGuardar_Click"/>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

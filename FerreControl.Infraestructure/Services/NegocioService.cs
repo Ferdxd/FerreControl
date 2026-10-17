@@ -1,5 +1,6 @@
 ﻿using FerreControl.Application.DTOs.Negocios;
-using FerreControl.Application.Interfaces;
+using FerreControl.Application.Interfaces.IRepository;
+using FerreControl.Application.Interfaces.IService;
 using FerreControl.Domain.Entities;
 using System;
 using System.Collections.Generic;

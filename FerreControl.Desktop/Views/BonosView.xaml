@@ -1,0 +1,525 @@
+﻿<UserControl x:Class="FerreControl.Desktop.Views.BonosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{StaticResource BackgroundBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- ====================================================== -->
+        <!-- CABECERA                                               -->
+        <!-- ====================================================== -->
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel>
+
+                <TextBlock
+                    Text="Bonos"
+                    Style="{StaticResource PageTitleStyle}"/>
+
+                <TextBlock
+                    Text="Configura incentivos y consulta el cumplimiento de los empleados."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="13"
+                    Margin="0,6,0,0"/>
+
+            </StackPanel>
+
+
+            <Button
+                x:Name="btnNuevoBono"
+                Grid.Column="1"
+                Content="+  Nuevo bono"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Height="42"/>
+
+        </Grid>
+
+
+        <!-- ====================================================== -->
+        <!-- INDICADORES                                            -->
+        <!-- ====================================================== -->
+
+        <Grid
+            Grid.Row="1"
+            Margin="0,22,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="BONOS ACTIVOS"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtBonosActivos"
+                        Text="--"
+                        Foreground="White"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="AUTOMÁTICOS"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtBonosAutomaticos"
+                        Text="--"
+                        Foreground="{StaticResource AccentLightBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="4"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="MANUALES"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtBonosManuales"
+                        Text="--"
+                        Foreground="{StaticResource WarningBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="6"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="OTORGADOS ESTE MES"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtBonosOtorgados"
+                        Text="--"
+                        Foreground="{StaticResource SuccessBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+        </Grid>
+
+
+        <!-- ====================================================== -->
+        <!-- CONTENIDO                                              -->
+        <!-- ====================================================== -->
+
+        <Grid
+            Grid.Row="2"
+            Margin="0,18,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.15*"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="1.85*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- CATÁLOGO -->
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel>
+
+                        <TextBlock
+                            Text="Catálogo de bonos"
+                            Style="{StaticResource SectionTitleStyle}"/>
+
+                        <TextBlock
+                            Text="Bonos configurados para el negocio."
+                            Foreground="{StaticResource TextSecondaryBrush}"
+                            FontSize="12"
+                            Margin="0,4,0,0"/>
+
+                    </StackPanel>
+
+
+                    <TextBox
+                        x:Name="txtBuscarBono"
+                        Grid.Row="1"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Margin="0,16,0,14"/>
+
+
+                    <ListBox
+                        x:Name="lstBonos"
+                        Grid.Row="2"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="White">
+
+                        <ListBox.ItemTemplate>
+
+                            <DataTemplate>
+
+                                <Border
+                                    Background="#0D1626"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="15"
+                                    Margin="0,0,0,9">
+
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+
+                                        <StackPanel>
+
+                                            <TextBlock
+                                                Text="{Binding Nombre}"
+                                                Foreground="White"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"/>
+
+                                            <TextBlock
+                                                Text="{Binding Periodicidad}"
+                                                Foreground="{StaticResource TextSecondaryBrush}"
+                                                FontSize="11"
+                                                Margin="0,5,0,0"/>
+
+                                            <TextBlock
+                                                Text="{Binding TipoAplicacion}"
+                                                Foreground="#64748B"
+                                                FontSize="10"
+                                                Margin="0,4,0,0"/>
+
+                                        </StackPanel>
+
+
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right">
+
+                                            <TextBlock
+                                                Text="{Binding Monto, StringFormat=Q {0:N2}}"
+                                                Foreground="{StaticResource SuccessBrush}"
+                                                FontWeight="SemiBold"
+                                                FontSize="16"
+                                                HorizontalAlignment="Right"/>
+
+                                            <Ellipse
+                                                Width="8"
+                                                Height="8"
+                                                Fill="{StaticResource SuccessBrush}"
+                                                HorizontalAlignment="Right"
+                                                Margin="0,10,0,0"/>
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- DETALLE -->
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel>
+
+                            <TextBlock
+                                x:Name="txtNombreBono"
+                                Text="Detalle del bono"
+                                Style="{StaticResource SectionTitleStyle}"/>
+
+                            <TextBlock
+                                Text="Configuración y condiciones del incentivo."
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                FontSize="12"
+                                Margin="0,4,0,0"/>
+
+                        </StackPanel>
+
+
+                        <Button
+                            x:Name="btnEditarBono"
+                            Grid.Column="1"
+                            Content="Editar bono"
+                            Style="{StaticResource SecondaryButtonStyle}"/>
+
+                    </Grid>
+
+
+                    <!-- DATOS -->
+
+                    <Border
+                        Grid.Row="1"
+                        Background="#0D1626"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16"
+                        Margin="0,18,0,0">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <StackPanel>
+
+                                <TextBlock
+                                    Text="MONTO"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
+
+                                <TextBlock
+                                    x:Name="txtMontoBono"
+                                    Text="Q --"
+                                    Foreground="{StaticResource SuccessBrush}"
+                                    FontSize="20"
+                                    FontWeight="SemiBold"
+                                    Margin="0,5,0,0"/>
+
+                            </StackPanel>
+
+
+                            <StackPanel Grid.Column="1">
+
+                                <TextBlock
+                                    Text="PERIODICIDAD"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
+
+                                <TextBlock
+                                    x:Name="txtPeriodicidadBono"
+                                    Text="--"
+                                    Foreground="White"
+                                    FontWeight="SemiBold"
+                                    Margin="0,5,0,0"/>
+
+                            </StackPanel>
+
+
+                            <StackPanel Grid.Column="2">
+
+                                <TextBlock
+                                    Text="APLICACIÓN"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
+
+                                <TextBlock
+                                    x:Name="txtAplicacionBono"
+                                    Text="--"
+                                    Foreground="{StaticResource AccentLightBrush}"
+                                    FontWeight="SemiBold"
+                                    Margin="0,5,0,0"/>
+
+                            </StackPanel>
+
+
+                            <StackPanel Grid.Column="3">
+
+                                <TextBlock
+                                    Text="ESTADO"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
+
+                                <TextBlock
+                                    x:Name="txtEstadoBono"
+                                    Text="--"
+                                    Foreground="{StaticResource SuccessBrush}"
+                                    FontWeight="SemiBold"
+                                    Margin="0,5,0,0"/>
+
+                            </StackPanel>
+
+                        </Grid>
+
+                    </Border>
+
+
+                    <!-- REGLAS -->
+
+                    <Grid
+                        Grid.Row="2"
+                        Margin="0,20,0,12">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel>
+
+                            <TextBlock
+                                Text="Condiciones"
+                                Foreground="White"
+                                FontSize="15"
+                                FontWeight="SemiBold"/>
+
+                            <TextBlock
+                                Text="Reglas necesarias para obtener el bono."
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                FontSize="11"
+                                Margin="0,3,0,0"/>
+
+                        </StackPanel>
+
+
+                        <Button
+                            x:Name="btnAgregarRegla"
+                            Grid.Column="1"
+                            Content="+ Regla"
+                            Style="{StaticResource SecondaryButtonStyle}"/>
+
+                    </Grid>
+
+
+                    <DataGrid
+                        x:Name="dgReglasBono"
+                        Grid.Row="3"
+                        Style="{StaticResource DarkDataGridStyle}"
+                        IsReadOnly="True">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn
+                                Header="Regla"
+                                Binding="{Binding TipoRegla}"
+                                Width="*"/>
+
+                            <DataGridTextColumn
+                                Header="Valor"
+                                Binding="{Binding Valor}"
+                                Width="140"/>
+
+                            <DataGridTextColumn
+                                Header="Descripción"
+                                Binding="{Binding Descripcion}"
+                                Width="2*"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

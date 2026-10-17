@@ -1,6 +1,6 @@
 ﻿using FerreControl.Application.DTOs.Empleados;
 using FerreControl.Application.DTOs.Negocios;
-using FerreControl.Application.Interfaces;
+using FerreControl.Application.Interfaces.IService;
 using FerreControl.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 

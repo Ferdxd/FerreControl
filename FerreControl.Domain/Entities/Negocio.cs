@@ -20,4 +20,9 @@ public class Negocio
 
     public ICollection<Empleado> Empleados { get; set; }
         = new List<Empleado>();
+
+    public ICollection<Horario> Horarios { get; set; } = new List<Horario>();
+    public ICollection<Nomina> Nominas { get; set; }
+    = new List<Nomina>();
+
 }

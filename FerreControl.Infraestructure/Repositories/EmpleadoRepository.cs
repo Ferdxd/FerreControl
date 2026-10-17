@@ -1,4 +1,4 @@
-﻿using FerreControl.Application.Interfaces;
+﻿using FerreControl.Application.Interfaces.IRepository;
 using FerreControl.Domain.Entities;
 using FerreControl.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

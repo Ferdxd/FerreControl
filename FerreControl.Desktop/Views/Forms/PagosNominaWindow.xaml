@@ -1,0 +1,136 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.Forms.PagosNominaWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Historial de pagos"
+        Width="900"
+        Height="590"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="28">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+
+        <StackPanel>
+
+            <TextBlock
+                Text="Historial de pagos"
+                Foreground="White"
+                FontSize="24"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                x:Name="txtEmpleado"
+                Foreground="{StaticResource TextSecondaryBrush}"
+                Margin="0,7,0,0"/>
+
+        </StackPanel>
+
+
+        <Border
+            Grid.Row="1"
+            Style="{StaticResource CardStyle}"
+            Margin="0,20,0,18">
+
+            <StackPanel
+                Orientation="Horizontal">
+
+                <TextBlock
+                    Text="Total pagado: "
+                    Foreground="{StaticResource TextSecondaryBrush}"/>
+
+                <TextBlock
+                    x:Name="txtTotalPagado"
+                    Text="Q 0.00"
+                    Foreground="{StaticResource SuccessBrush}"
+                    FontWeight="SemiBold"/>
+
+            </StackPanel>
+
+        </Border>
+
+
+        <DataGrid
+            x:Name="dgPagos"
+            Grid.Row="2"
+            Style="{StaticResource DarkDataGridStyle}"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            SelectionMode="Single"
+            SelectionUnit="FullRow"
+            SelectionChanged="DgPagos_SelectionChanged">
+
+            <DataGrid.Columns>
+
+                <DataGridTextColumn
+                    Header="Fecha"
+                    Binding="{Binding FechaPago,
+                    StringFormat=dd/MM/yyyy}"
+                    Width="100"/>
+
+                <DataGridTextColumn
+                    Header="Monto"
+                    Binding="{Binding Monto,
+                    StringFormat='Q {0:N2}'}"
+                    Width="120"/>
+
+                <DataGridTextColumn
+                    Header="Método"
+                    Binding="{Binding MetodoPago}"
+                    Width="130"/>
+
+                <DataGridTextColumn
+                    Header="Referencia"
+                    Binding="{Binding Referencia}"
+                    Width="150"/>
+
+                <DataGridTextColumn
+                    Header="Observación"
+                    Binding="{Binding Observacion}"
+                    Width="*"/>
+
+                <DataGridCheckBoxColumn
+                    Header="Activo"
+                    Binding="{Binding Estado, Mode=OneWay}"
+                    Width="70"/>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+
+        <StackPanel
+            Grid.Row="3"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="0,20,0,0">
+
+            <Button
+                x:Name="btnAnular"
+                Content="Anular pago"
+                Style="{StaticResource SecondaryButtonStyle}"
+                IsEnabled="False"
+                Margin="0,0,12,0"
+                Click="BtnAnular_Click"/>
+
+            <Button
+                Content="Cerrar"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Click="BtnCerrar_Click"/>
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

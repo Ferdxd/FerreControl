@@ -23,4 +23,8 @@ public class EmpleadoDto
     public string? Puesto { get; set; }
 
     public bool Estado { get; set; }
+
+    public DateTime? FechaIngreso { get; set; }
+    public DateTime FechaCreacion { get; set; }
+    public DateTime? FechaBaja { get; set; }
 }

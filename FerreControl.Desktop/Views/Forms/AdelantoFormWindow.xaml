@@ -1,0 +1,150 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.AdelantoFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registrar adelanto"
+        Width="560"
+        Height="650"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="28">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+
+        <StackPanel>
+
+            <TextBlock
+                Text="Registrar adelanto"
+                Foreground="White"
+                FontSize="24"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                x:Name="txtEmpleado"
+                Foreground="{StaticResource TextSecondaryBrush}"
+                Margin="0,7,0,0"/>
+
+        </StackPanel>
+
+
+        <Border
+            Grid.Row="1"
+            Style="{StaticResource CardStyle}"
+            Margin="0,22,0,22">
+
+            <StackPanel>
+
+
+                <TextBlock
+                    Text="MONTO"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <TextBox
+                    x:Name="txtMonto"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,0,18"/>
+
+
+                <TextBlock
+                    Text="FECHA"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <DatePicker
+                    x:Name="dpFecha"
+                    Style="{StaticResource ModernDatePickerStyle}"
+                    Margin="0,0,0,18"/>
+
+
+                <TextBlock
+                    Text="MÉTODO DE ENTREGA"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <ComboBox
+                    x:Name="cmbMetodo"
+                    Style="{StaticResource ModernComboBoxStyle}"
+                    Margin="0,0,0,18">
+
+                    <ComboBoxItem Content="EFECTIVO"/>
+
+                    <ComboBoxItem Content="TRANSFERENCIA"/>
+
+                    <ComboBoxItem Content="DEPOSITO"/>
+
+                    <ComboBoxItem Content="OTRO"/>
+
+                </ComboBox>
+
+
+                <TextBlock
+                    Text="REFERENCIA"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <TextBox
+                    x:Name="txtReferencia"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,0,18"/>
+
+
+                <TextBlock
+                    Text="OBSERVACIÓN"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+                <TextBox
+                    x:Name="txtObservacion"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Height="65"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"/>
+
+            </StackPanel>
+
+        </Border>
+
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+
+            <Button
+                Content="Cancelar"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Margin="0,0,12,0"
+                Click="BtnCancelar_Click"/>
+
+            <Button
+                x:Name="btnGuardar"
+                Content="Registrar adelanto"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Click="BtnGuardar_Click"/>
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

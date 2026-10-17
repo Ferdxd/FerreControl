@@ -1,0 +1,293 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.Forms.HorarioFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Horario"
+        Width="900"
+        Height="720"
+        MinWidth="850"
+        MinHeight="650"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="30">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- CABECERA -->
+
+        <StackPanel>
+
+            <TextBlock
+                x:Name="txtTitulo"
+                Text="Nuevo horario"
+                Style="{StaticResource PageTitleStyle}"/>
+
+            <TextBlock
+                x:Name="txtSubtitulo"
+                Text="Configura la jornada semanal."
+                Foreground="{StaticResource TextSecondaryBrush}"
+                FontSize="13"
+                Margin="0,6,0,0"/>
+
+        </StackPanel>
+
+
+        <!-- DATOS GENERALES -->
+
+        <Border
+            Grid.Row="1"
+            Style="{StaticResource CardStyle}"
+            Margin="0,22,0,18">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="Nombre del horario"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtNombre"
+                        Style="{StaticResource ModernTextBoxStyle}"/>
+
+                </StackPanel>
+
+
+                <StackPanel Grid.Column="2">
+
+                    <TextBlock
+                        Text="Tolerancia (minutos)"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Margin="0,0,0,6"/>
+
+                    <TextBox
+                        x:Name="txtTolerancia"
+                        Style="{StaticResource ModernTextBoxStyle}"
+                        Text="0"/>
+
+                </StackPanel>
+
+
+                <StackPanel
+                    x:Name="panelEstado"
+                    Grid.Column="4"
+                    VerticalAlignment="Bottom"
+                    Visibility="Collapsed">
+
+                    <CheckBox
+                        x:Name="chkEstado"
+                        Content="Horario activo"
+                        Foreground="White"
+                        FontSize="14"
+                        IsChecked="True"
+                        Margin="0,0,5,10"/>
+
+                </StackPanel>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- SEMANA -->
+
+        <Border
+            Grid.Row="2"
+            Style="{StaticResource CardStyle}">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+
+                <TextBlock
+                    Text="Configuración semanal"
+                    Style="{StaticResource SectionTitleStyle}"/>
+
+
+                <TextBlock
+                    Grid.Row="1"
+                    Text="Utiliza formato de 24 horas. Ejemplo: 07:00, 17:30."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="12"
+                    Margin="0,5,0,15"/>
+
+
+                <DataGrid
+                    x:Name="dgDias"
+                    Grid.Row="2"
+                    Style="{StaticResource DarkDataGridStyle}"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="False"
+                    CanUserAddRows="False">
+
+                    <DataGrid.Columns>
+
+
+                        <DataGridTextColumn
+                            Header="Día"
+                            Binding="{Binding NombreDia}"
+                            IsReadOnly="True"
+                            Width="150"/>
+
+
+                        <DataGridTemplateColumn
+                            Header="Laboral"
+                            Width="90">
+
+                            <DataGridTemplateColumn.CellTemplate>
+
+                                <DataTemplate>
+
+                                    <CheckBox
+                                        IsChecked="{Binding EsLaboral,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"/>
+
+                                </DataTemplate>
+
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+
+                        <DataGridTemplateColumn
+                            Header="Entrada"
+                            Width="150">
+
+                            <DataGridTemplateColumn.CellTemplate>
+
+                                <DataTemplate>
+
+                                    <TextBox
+                                        Text="{Binding HoraEntrada,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                                        IsEnabled="{Binding EsLaboral}"
+                                        Background="#0D1626"
+                                        Foreground="White"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="8"/>
+
+                                </DataTemplate>
+
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+
+                        <DataGridTemplateColumn
+                            Header="Salida"
+                            Width="150">
+
+                            <DataGridTemplateColumn.CellTemplate>
+
+                                <DataTemplate>
+
+                                    <TextBox
+                                        Text="{Binding HoraSalida,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                                        IsEnabled="{Binding EsLaboral}"
+                                        Background="#0D1626"
+                                        Foreground="White"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="8"/>
+
+                                </DataTemplate>
+
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+
+                        <DataGridTemplateColumn
+                            Header="Descanso (min)"
+                            Width="150">
+
+                            <DataGridTemplateColumn.CellTemplate>
+
+                                <DataTemplate>
+
+                                    <TextBox
+                                        Text="{Binding MinutosDescanso,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                                        IsEnabled="{Binding EsLaboral}"
+                                        Background="#0D1626"
+                                        Foreground="White"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        Padding="8"/>
+
+                                </DataTemplate>
+
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- BOTONES -->
+
+        <Grid
+            Grid.Row="3"
+            Margin="0,20,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="180"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Button
+                Grid.Column="1"
+                Content="Cancelar"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="BtnCancelar_Click"/>
+
+
+            <Button
+                x:Name="btnGuardar"
+                Grid.Column="3"
+                Content="Guardar horario"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Click="BtnGuardar_Click"/>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

@@ -24,7 +24,7 @@ public class Empleado
 
     public string? Puesto { get; set; }
 
-    public DateTime FechaIngreso { get; set; }
+    public DateTime? FechaIngreso { get; set; }
 
     public DateTime? FechaBaja { get; set; }
 
@@ -36,4 +36,16 @@ public class Empleado
 
     public ICollection<SalarioEmpleado> Salarios { get; set; }
         = new List<SalarioEmpleado>();
+
+    public ICollection<EmpleadoHorario> Horarios { get; set; } = new List<EmpleadoHorario>();
+
+    public ICollection<EmpleadoCredencial> Credenciales { get; set; }
+        = new List<EmpleadoCredencial>();
+
+    public ICollection<MarcacionAsistencia> Marcaciones { get; set; }
+        = new List<MarcacionAsistencia>();
+    public ICollection<NominaDetalle> Nominas { get; set; }
+    = new List<NominaDetalle>();
+    public ICollection<AdelantoEmpleado> Adelantos { get; set; }
+    = new List<AdelantoEmpleado>();
 }

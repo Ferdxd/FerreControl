@@ -1,5 +1,5 @@
 ﻿using FerreControl.Application.DTOs.Salarios;
-using FerreControl.Application.Interfaces;
+using FerreControl.Application.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FerreControl.Api.Controllers
@@ -26,6 +26,10 @@ namespace FerreControl.Api.Controllers
                 var salarios =
                     await _salarioEmpleadoService
                         .ObtenerHistorialAsync(idEmpleado);
+                if (salarios == null)
+                {
+                    return NotFound();
+                }
 
                 return Ok(salarios);
             }

@@ -1,0 +1,434 @@
+﻿<UserControl x:Class="FerreControl.Desktop.Views.SalariosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{StaticResource BackgroundBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- CABECERA -->
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel>
+
+                <TextBlock
+                    Text="Salarios"
+                    Style="{StaticResource PageTitleStyle}"/>
+
+                <TextBlock
+                    Text="Administra el salario vigente y consulta su historial."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="13"
+                    Margin="0,6,0,0"/>
+
+            </StackPanel>
+
+
+            <Button
+                x:Name="btnRegistrarSalario"
+                Grid.Column="1"
+                Content="+  Registrar salario"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Height="42"
+                Click="BtnRegistrarSalario_Click"/>
+
+        </Grid>
+
+
+        <!-- RESUMEN -->
+
+        <Grid
+            Grid.Row="1"
+            Margin="0,22,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="CON SALARIO"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtEmpleadosConSalario"
+                        Text="--"
+                        Foreground="{StaticResource SuccessBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="SALARIO PROMEDIO"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtSalarioPromedio"
+                        Text="--"
+                        Foreground="White"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="4"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="SIN SALARIO"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtEmpleadosSinSalario"
+                        Text="--"
+                        Foreground="{StaticResource WarningBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+        </Grid>
+
+
+        <!-- FILTROS -->
+
+        <Border
+            Grid.Row="2"
+            Style="{StaticResource CardStyle}"
+            Margin="0,18,0,0">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="170"/>
+                </Grid.ColumnDefinitions>
+
+
+                <TextBox
+                    x:Name="txtBuscarSalario"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,15,0"
+                    TextChanged="TxtBuscarSalario_TextChanged"/>
+
+
+                <ComboBox
+                    x:Name="cmbPeriodicidad"
+                    Grid.Column="1"
+                    Style="{StaticResource ModernComboBoxStyle}"
+                    SelectionChanged="CmbFiltros_SelectionChanged">
+
+                    <ComboBoxItem Content="Todas"/>
+                    <ComboBoxItem Content="Semanal"/>
+                    <ComboBoxItem Content="Quincenal"/>
+                    <ComboBoxItem Content="Mensual"/>
+
+                </ComboBox>
+
+
+                <ComboBox
+                    x:Name="cmbEstadoSalario"
+                    Grid.Column="3"
+                    Style="{StaticResource ModernComboBoxStyle}"
+                    SelectionChanged="CmbFiltros_SelectionChanged">
+
+                    <ComboBoxItem Content="Todos"/>
+                    <ComboBoxItem Content="Con salario"/>
+                    <ComboBoxItem Content="Sin salario"/>
+
+                </ComboBox>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- CONTENIDO -->
+
+        <Grid
+            Grid.Row="3"
+            Margin="0,18,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="360"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- TABLA -->
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock
+                        Text="Salarios de empleados"
+                        Style="{StaticResource SectionTitleStyle}"
+                        Margin="0,0,0,15"/>
+
+
+                    <DataGrid
+                        x:Name="dgSalarios"
+                        Grid.Row="1"
+                        Style="{StaticResource DarkDataGridStyle}"
+                        IsReadOnly="True"
+                        SelectionChanged="DgSalarios_SelectionChanged">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn
+                                Header="Código"
+                                Binding="{Binding CodigoEmpleado}"
+                                Width="90"/>
+
+                            <DataGridTextColumn
+                                Header="Empleado"
+                                Binding="{Binding NombreEmpleado}"
+                                Width="*"/>
+
+                            <DataGridTextColumn
+                                Header="Puesto"
+                                Binding="{Binding Puesto}"
+                                Width="130"/>
+
+                            <DataGridTextColumn
+                                Header="Salario"
+                                Binding="{Binding Monto,
+                                    StringFormat='Q {0:N2}'}"
+                                Width="120"/>
+
+                            <DataGridTextColumn
+                                Header="Periodicidad"
+                                Binding="{Binding Periodicidad}"
+                                Width="110"/>
+
+                            <DataGridTextColumn
+                                Header="Desde"
+                                Binding="{Binding FechaInicio,
+                                    StringFormat=dd/MM/yyyy}"
+                                Width="110"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- DETALLE -->
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel>
+
+                        <TextBlock
+                            Text="Detalle del empleado"
+                            Style="{StaticResource SectionTitleStyle}"/>
+
+                        <TextBlock
+                            x:Name="txtEmpleadoSalario"
+                            Text="Selecciona un empleado"
+                            Foreground="{StaticResource TextSecondaryBrush}"
+                            Margin="0,5,0,0"/>
+
+                    </StackPanel>
+
+
+                    <!-- SALARIO ACTUAL -->
+
+                    <Border
+                        Grid.Row="1"
+                        Background="#0D1626"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15"
+                        Margin="0,18,0,15">
+
+                        <StackPanel>
+
+                            <TextBlock
+                                Text="SALARIO ACTUAL"
+                                Foreground="#64748B"
+                                FontSize="10"
+                                FontWeight="Bold"/>
+
+                            <TextBlock
+                                x:Name="txtSalarioActual"
+                                Text="--"
+                                Foreground="White"
+                                FontSize="26"
+                                FontWeight="SemiBold"
+                                Margin="0,6,0,12"/>
+
+
+                            <TextBlock
+                                Text="Periodicidad"
+                                Foreground="#64748B"
+                                FontSize="10"/>
+
+                            <TextBlock
+                                x:Name="txtPeriodicidadActual"
+                                Text="--"
+                                Foreground="White"
+                                Margin="0,3,0,10"/>
+
+
+                            <TextBlock
+                                Text="Vigente desde"
+                                Foreground="#64748B"
+                                FontSize="10"/>
+
+                            <TextBlock
+                                x:Name="txtFechaInicioSalario"
+                                Text="--"
+                                Foreground="White"
+                                Margin="0,3,0,0"/>
+
+                        </StackPanel>
+
+                    </Border>
+
+
+                    <Button
+                        x:Name="btnCambiarSalario"
+                        Grid.Row="2"
+                        Content="Registrar salario"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        IsEnabled="False"
+                        Margin="0,0,0,18"
+                        Click="BtnCambiarSalario_Click"/>
+
+
+                    <!-- HISTORIAL -->
+
+                    <Grid Grid.Row="3">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+
+                        <TextBlock
+                            Text="Historial"
+                            Style="{StaticResource SectionTitleStyle}"
+                            Margin="0,0,0,10"/>
+
+
+                        <DataGrid
+                            x:Name="dgHistorialSalarios"
+                            Grid.Row="1"
+                            Style="{StaticResource DarkDataGridStyle}"
+                            IsReadOnly="True">
+
+                            <DataGrid.Columns>
+
+                                <DataGridTextColumn
+                                    Header="Desde"
+                                    Binding="{Binding FechaInicio,
+                                        StringFormat=dd/MM/yyyy}"
+                                    Width="95"/>
+
+                                <DataGridTextColumn
+                                    Header="Hasta"
+                                    Binding="{Binding FechaFin,
+                                        StringFormat=dd/MM/yyyy}"
+                                    Width="95"/>
+
+                                <DataGridTextColumn
+                                    Header="Monto"
+                                    Binding="{Binding Monto,
+                                        StringFormat='Q {0:N2}'}"
+                                    Width="*"/>
+
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+
+                    </Grid>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace FerreControl.Application.DTOs.Empleados
 {
-    internal class ActualizarEmpleadoDto
+    public class ActualizarEmpleadoDto
     {
-        public int ID { get; set; }
-
-        public int NegocioID { get; set; }
-
         public string Codigo { get; set; } = string.Empty;
 
         public string Nombres { get; set; } = string.Empty;

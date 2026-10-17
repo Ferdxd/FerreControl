@@ -1,0 +1,290 @@
+﻿<UserControl x:Class="FerreControl.Desktop.Views.EmpleadosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{StaticResource BackgroundBrush}">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+
+        <!-- TÍTULO -->
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="Auto"/>
+
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel>
+
+                <TextBlock
+                    Text="Empleados"
+                    Style="{StaticResource PageTitleStyle}"/>
+
+                <TextBlock
+                    Text="Administra la información y expediente de los empleados."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="13"
+                    Margin="0,6,0,0"/>
+
+            </StackPanel>
+
+
+            <Button
+                x:Name="btnNuevoEmpleado"
+                Grid.Column="1"
+                Content="+  Nuevo empleado"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Height="42"
+                VerticalAlignment="Center"
+                Click="BtnNuevoEmpleado_Click"/>
+
+        </Grid>
+
+
+        <!-- RESUMEN -->
+
+        <Grid
+            Grid.Row="1"
+            Margin="0,22,0,0">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="14"/>
+
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="14"/>
+
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="TOTAL EMPLEADOS"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtTotalEmpleados"
+                        Text="--"
+                        Foreground="White"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="ACTIVOS"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtEmpleadosActivos"
+                        Text="--"
+                        Foreground="{StaticResource SuccessBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="4"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="INACTIVOS"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtEmpleadosInactivos"
+                        Text="--"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+        </Grid>
+
+
+        <!-- FILTROS -->
+
+        <Border
+            Grid.Row="2"
+            Style="{StaticResource CardStyle}"
+            Margin="0,18,0,0">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*"/>
+
+                    <ColumnDefinition Width="180"/>
+
+                </Grid.ColumnDefinitions>
+
+
+                <TextBox
+                    x:Name="txtBuscarEmpleado"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,15,0"
+                    TextChanged="TxtBuscarEmpleado_TextChanged"/>
+
+
+                <ComboBox
+                    x:Name="cmbEstadoEmpleado"
+                    Grid.Column="1"
+                    Style="{StaticResource ModernComboBoxStyle}"
+                    SelectionChanged="CmbEstadoEmpleado_SelectionChanged">
+
+                    <ComboBoxItem Content="Todos"/>
+
+                    <ComboBoxItem Content="Activos"/>
+
+                    <ComboBoxItem Content="Inactivos"/>
+
+                </ComboBox>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- TABLA -->
+
+        <Border
+            Grid.Row="3"
+            Style="{StaticResource CardStyle}"
+            Margin="0,18,0,0">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"/>
+
+                    <RowDefinition Height="*"/>
+
+                </Grid.RowDefinitions>
+
+
+                <StackPanel
+                    Margin="0,0,0,15">
+
+                    <TextBlock
+                        Text="Listado de empleados"
+                        Style="{StaticResource SectionTitleStyle}"/>
+
+                    <TextBlock
+                        Text="Selecciona un empleado para consultar su expediente."
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        FontSize="12"
+                        Margin="0,4,0,0"/>
+
+                </StackPanel>
+
+
+                <DataGrid
+                    x:Name="dgEmpleados"
+                    Grid.Row="1"
+                    Style="{StaticResource DarkDataGridStyle}"
+                    IsReadOnly="True"
+                    MouseDoubleClick="DgEmpleados_MouseDoubleClick">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn
+                            Header="Código"
+                            Binding="{Binding Codigo}"
+                            Width="110"/>
+
+                        <DataGridTextColumn
+                            Header="Nombres"
+                            Binding="{Binding Nombres}"
+                            Width="*"/>
+
+                        <DataGridTextColumn
+                            Header="Apellidos"
+                            Binding="{Binding Apellidos}"
+                            Width="*"/>
+
+                        <DataGridTextColumn
+                            Header="Puesto"
+                            Binding="{Binding Puesto}"
+                            Width="160"/>
+
+                        <DataGridTextColumn
+                            Header="Teléfono"
+                            Binding="{Binding Telefono}"
+                            Width="140"/>
+
+                        <DataGridTextColumn
+                            Header="Fecha ingreso"
+                            Binding="{Binding FechaIngreso, StringFormat=dd/MM/yyyy}"
+                            Width="130"/>
+
+                        <DataGridCheckBoxColumn
+                            Header="Activo"
+                            Binding="{Binding Estado}"
+                            Width="90"/>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+
+</UserControl>

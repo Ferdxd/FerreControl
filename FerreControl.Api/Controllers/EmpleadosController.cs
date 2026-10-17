@@ -1,5 +1,5 @@
 ﻿using FerreControl.Application.DTOs.Empleados;
-using FerreControl.Application.Interfaces;
+using FerreControl.Application.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FerreControl.Api.Controllers;
@@ -51,6 +51,20 @@ public class EmpleadosController : ControllerBase
                 nameof(ObtenerPorId),
                 new { id = empleado.ID },
                 empleado);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<EmpleadoDto>> Actualizar(int id,ActualizarEmpleadoDto dto)
+    {
+        try
+        {
+            var empleado =await _empleadoService.ActualizarEmpleado(id, dto);
+            return Ok(empleado);
         }
         catch (InvalidOperationException ex)
         {

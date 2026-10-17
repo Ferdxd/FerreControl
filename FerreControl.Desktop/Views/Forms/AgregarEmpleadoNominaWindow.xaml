@@ -1,0 +1,141 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.Forms.AgregarEmpleadoNominaWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Agregar empleado"
+        Width="560"
+        Height="650"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="28">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+
+        <StackPanel>
+
+            <TextBlock
+                Text="Agregar empleado"
+                Foreground="White"
+                FontSize="24"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                Text="Agrega un empleado al período de nómina."
+                Foreground="{StaticResource TextSecondaryBrush}"
+                Margin="0,7,0,0"/>
+
+        </StackPanel>
+
+
+        <Border
+            Grid.Row="1"
+            Style="{StaticResource CardStyle}"
+            Margin="0,24,0,24">
+
+            <StackPanel>
+
+
+                <TextBlock
+                    Text="EMPLEADO"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+
+                <ComboBox
+                    x:Name="cmbEmpleado"
+                    Style="{StaticResource ModernComboBoxStyle}"
+                    DisplayMemberPath="Nombre"
+                    Margin="0,0,0,20"/>
+
+
+                <TextBlock
+                    Text="BONIFICACIONES"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+
+                <TextBox
+                    x:Name="txtBonificaciones"
+                    Text="0"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,0,20"/>
+
+
+                <TextBlock
+                    Text="HORAS EXTRA"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+
+                <TextBox
+                    x:Name="txtHorasExtra"
+                    Text="0"
+                    Style="{StaticResource ModernTextBoxStyle}"
+                    Margin="0,0,0,20"/>
+
+
+                <TextBlock
+                    Text="OTROS DESCUENTOS"
+                    Foreground="#64748B"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0,0,0,7"/>
+
+
+                <TextBox
+                    x:Name="txtOtrosDescuentos"
+                    Text="0"
+                    Style="{StaticResource ModernTextBoxStyle}"/>
+
+
+                <TextBlock
+                    Text="Los adelantos no se ingresan aquí. Se aplican desde su propio botón."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="11"
+                    TextWrapping="Wrap"
+                    Margin="0,15,0,0"/>
+
+            </StackPanel>
+
+        </Border>
+
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+
+            <Button
+                Content="Cancelar"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Margin="0,0,12,0"
+                Click="BtnCancelar_Click"/>
+
+
+            <Button
+                x:Name="btnGuardar"
+                Content="Agregar empleado"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Click="BtnGuardar_Click"/>
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>
