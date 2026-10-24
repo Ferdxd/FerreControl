@@ -1,4 +1,4 @@
-﻿using FerreControl.Application.DTOs.Nomina;
+using FerreControl.Application.DTOs.Nomina;
 using FerreControl.Application.Interfaces.IRepository;
 using FerreControl.Application.Interfaces.IService;
 using FerreControl.Domain.Entities;
@@ -8,90 +8,79 @@ namespace FerreControl.Infraestructure.Services
     public class NominaDetalleService
         : INominaDetalleService
     {
-        private readonly INominaDetalleRepository
-            _detalleRepository;
-
-        private readonly INominaRepository
-            _nominaRepository;
-
-        private readonly IEmpleadoRepository
-            _empleadoRepository;
-
-        private readonly ISalarioEmpleadoRepository
-            _salarioRepository;
-
-        private readonly IPagoNominaRepository
-            _pagoRepository;
-
+        private readonly INominaDetalleRepository _detalleRepository;
+        private readonly INominaRepository _nominaRepository;
+        private readonly IEmpleadoRepository _empleadoRepository;
+        private readonly ISalarioEmpleadoRepository _salarioRepository;
+        private readonly IPagoNominaRepository _pagoRepository;
+        private readonly IHoraExtraService _horaExtraService;
 
         public NominaDetalleService(
             INominaDetalleRepository detalleRepository,
             INominaRepository nominaRepository,
             IEmpleadoRepository empleadoRepository,
             ISalarioEmpleadoRepository salarioRepository,
-            IPagoNominaRepository pagoRepository)
+            IPagoNominaRepository pagoRepository,
+            IHoraExtraService horaExtraService)
         {
-            _detalleRepository =
-                detalleRepository;
-
-            _nominaRepository =
-                nominaRepository;
-
-            _empleadoRepository =
-                empleadoRepository;
-
-            _salarioRepository =
-                salarioRepository;
-
-            _pagoRepository =
-                pagoRepository;
+            _detalleRepository = detalleRepository;
+            _nominaRepository = nominaRepository;
+            _empleadoRepository = empleadoRepository;
+            _salarioRepository = salarioRepository;
+            _pagoRepository = pagoRepository;
+            _horaExtraService = horaExtraService;
         }
 
-
         public async Task<List<NominaDetalleDto>>
-            ObtenerPorNominaAsync(
-                int nominaId)
+            ObtenerPorNominaAsync(int nominaId)
         {
+            var nomina =
+                await _nominaRepository
+                    .ObtenerPorIdAsync(nominaId);
+
+            if (nomina == null)
+            {
+                throw new InvalidOperationException(
+                    "Nómina no encontrada.");
+            }
+
+            if (string.Equals(
+                nomina.Estado,
+                "BORRADOR",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                await _horaExtraService
+                    .RecalcularNominaAsync(nominaId);
+            }
+
             var detalles =
                 await _detalleRepository
-                    .ObtenerPorNominaAsync(
-                        nominaId);
-
+                    .ObtenerPorNominaAsync(nominaId);
 
             var resultado =
                 new List<NominaDetalleDto>();
 
-
             foreach (var detalle in detalles)
             {
                 resultado.Add(
-                    await MapearDtoAsync(
-                        detalle));
+                    await MapearDtoAsync(detalle));
             }
-
 
             return resultado;
         }
 
-
         public async Task<NominaDetalleDto?>
-            ObtenerPorIdAsync(
-                int id)
+            ObtenerPorIdAsync(int id)
         {
             var detalle =
                 await _detalleRepository
-                    .ObtenerPorIdAsync(
-                        id);
-
+                    .ObtenerPorIdAsync(id);
 
             if (detalle == null)
                 return null;
 
-
-            return await MapearDtoAsync(
-                detalle);
+            return await MapearDtoAsync(detalle);
         }
-
 
         public async Task<NominaDetalleDto>
             CrearAsync(
@@ -100,9 +89,7 @@ namespace FerreControl.Infraestructure.Services
         {
             var nomina =
                 await _nominaRepository
-                    .ObtenerPorIdAsync(
-                        nominaId);
-
+                    .ObtenerPorIdAsync(nominaId);
 
             if (nomina == null)
             {
@@ -110,19 +97,15 @@ namespace FerreControl.Infraestructure.Services
                     "Nómina no encontrada.");
             }
 
-
             if (nomina.Estado != "BORRADOR")
             {
                 throw new InvalidOperationException(
                     "Solo se pueden agregar empleados a una nómina en estado BORRADOR.");
             }
 
-
             var empleado =
                 await _empleadoRepository
-                    .ObtenerPorIdAsync(
-                        dto.EmpleadoID);
-
+                    .ObtenerPorIdAsync(dto.EmpleadoID);
 
             if (empleado == null)
             {
@@ -130,21 +113,17 @@ namespace FerreControl.Infraestructure.Services
                     "Empleado no encontrado.");
             }
 
-
             if (!empleado.Estado)
             {
                 throw new InvalidOperationException(
                     "El empleado se encuentra inactivo.");
             }
 
-
-            if (empleado.NegocioID !=
-                nomina.NegocioID)
+            if (empleado.NegocioID != nomina.NegocioID)
             {
                 throw new InvalidOperationException(
                     "El empleado no pertenece al negocio de la nómina.");
             }
-
 
             var existente =
                 await _detalleRepository
@@ -152,19 +131,15 @@ namespace FerreControl.Infraestructure.Services
                         nominaId,
                         dto.EmpleadoID);
 
-
             if (existente != null)
             {
                 throw new InvalidOperationException(
                     "El empleado ya fue agregado a esta nómina.");
             }
 
-
             var salario =
                 await _salarioRepository
-                    .ObtenerActualAsync(
-                        dto.EmpleadoID);
-
+                    .ObtenerActualAsync(dto.EmpleadoID);
 
             if (salario == null)
             {
@@ -172,21 +147,11 @@ namespace FerreControl.Infraestructure.Services
                     "El empleado no tiene un salario vigente.");
             }
 
-
             long bonificaciones =
-                ConvertirCentavos(
-                    dto.Bonificaciones);
-
-
-            long horasExtra =
-                ConvertirCentavos(
-                    dto.HorasExtra);
-
+                ConvertirCentavos(dto.Bonificaciones);
 
             long otrosDescuentos =
-                ConvertirCentavos(
-                    dto.OtrosDescuentos);
-
+                ConvertirCentavos(dto.OtrosDescuentos);
 
             if (bonificaciones < 0)
             {
@@ -194,30 +159,16 @@ namespace FerreControl.Infraestructure.Services
                     "Las bonificaciones no pueden ser negativas.");
             }
 
-
-            if (horasExtra < 0)
-            {
-                throw new InvalidOperationException(
-                    "Las horas extra no pueden ser negativas.");
-            }
-
-
             if (otrosDescuentos < 0)
             {
                 throw new InvalidOperationException(
                     "Los otros descuentos no pueden ser negativos.");
             }
 
-
             long total =
                 salario.MontoCentavos
-                +
-                bonificaciones
-                +
-                horasExtra
-                -
-                otrosDescuentos;
-
+                + bonificaciones
+                - otrosDescuentos;
 
             if (total < 0)
             {
@@ -225,51 +176,36 @@ namespace FerreControl.Infraestructure.Services
                     "El total de la nómina no puede ser negativo.");
             }
 
-
             var detalle =
                 new NominaDetalle
                 {
-                    NominaID =
-                        nominaId,
-
-                    EmpleadoID =
-                        empleado.ID,
-
-                    SalarioEmpleadoID =
-                        salario.ID,
-
-                    SalarioBaseCentavos =
-                        salario.MontoCentavos,
-
-                    BonificacionesCentavos =
-                        bonificaciones,
-
-                    HorasExtraCentavos =
-                        horasExtra,
-
-                    AdelantosCentavos =
-                        0,
-
-                    OtrosDescuentosCentavos =
-                        otrosDescuentos,
-
-                    TotalPagarCentavos =
-                        total,
-
-                    FechaCreacion =
-                        DateTime.Now
+                    NominaID = nominaId,
+                    EmpleadoID = empleado.ID,
+                    SalarioEmpleadoID = salario.ID,
+                    SalarioBaseCentavos = salario.MontoCentavos,
+                    SalarioDevengadoCentavos = salario.MontoCentavos,
+                    BonificacionesCentavos = bonificaciones,
+                    HorasExtraCentavos = 0,
+                    AdelantosCentavos = 0,
+                    OtrosDescuentosCentavos = otrosDescuentos,
+                    TotalPagarCentavos = total,
+                    MinutosExtra = 0,
+                    FechaCreacion = DateTime.Now
                 };
 
-
             await _detalleRepository
-                .AgregarAsync(
-                    detalle);
+                .AgregarAsync(detalle);
 
+            await _horaExtraService
+                .RecalcularNominaAsync(nominaId);
 
-            return await MapearDtoAsync(
-                detalle);
+            var actualizado =
+                await _detalleRepository
+                    .ObtenerPorIdAsync(detalle.ID)
+                ?? detalle;
+
+            return await MapearDtoAsync(actualizado);
         }
-
 
         private async Task<NominaDetalleDto>
             MapearDtoAsync(
@@ -280,68 +216,30 @@ namespace FerreControl.Infraestructure.Services
                     .ObtenerTotalPagadoCentavosAsync(
                         detalle.ID);
 
-
             var pendiente =
                 detalle.TotalPagarCentavos
-                -
-                totalPagado;
-
+                - totalPagado;
 
             if (pendiente < 0)
                 pendiente = 0;
 
-
             return new NominaDetalleDto
             {
-                ID =
-                    detalle.ID,
-
-                NominaID =
-                    detalle.NominaID,
-
-                EmpleadoID =
-                    detalle.EmpleadoID,
-
-                SalarioEmpleadoID =
-                    detalle.SalarioEmpleadoID,
-
-                SalarioBase =
-                    ConvertirDecimal(
-                        detalle.SalarioBaseCentavos),
-
-                Bonificaciones =
-                    ConvertirDecimal(
-                        detalle.BonificacionesCentavos),
-
-                HorasExtra =
-                    ConvertirDecimal(
-                        detalle.HorasExtraCentavos),
-
-                Adelantos =
-                    ConvertirDecimal(
-                        detalle.AdelantosCentavos),
-
-                OtrosDescuentos =
-                    ConvertirDecimal(
-                        detalle.OtrosDescuentosCentavos),
-
-                TotalPagar =
-                    ConvertirDecimal(
-                        detalle.TotalPagarCentavos),
-
-                TotalPagado =
-                    ConvertirDecimal(
-                        totalPagado),
-
-                Pendiente =
-                    ConvertirDecimal(
-                        pendiente),
-
-                FechaCreacion =
-                    detalle.FechaCreacion
+                ID = detalle.ID,
+                NominaID = detalle.NominaID,
+                EmpleadoID = detalle.EmpleadoID,
+                SalarioEmpleadoID = detalle.SalarioEmpleadoID,
+                SalarioBase = ConvertirDecimal(detalle.SalarioBaseCentavos),
+                Bonificaciones = ConvertirDecimal(detalle.BonificacionesCentavos),
+                HorasExtra = ConvertirDecimal(detalle.HorasExtraCentavos),
+                Adelantos = ConvertirDecimal(detalle.AdelantosCentavos),
+                OtrosDescuentos = ConvertirDecimal(detalle.OtrosDescuentosCentavos),
+                TotalPagar = ConvertirDecimal(detalle.TotalPagarCentavos),
+                TotalPagado = ConvertirDecimal(totalPagado),
+                Pendiente = ConvertirDecimal(pendiente),
+                FechaCreacion = detalle.FechaCreacion
             };
         }
-
 
         private static long ConvertirCentavos(
             decimal monto)
@@ -350,7 +248,6 @@ namespace FerreControl.Infraestructure.Services
                 monto * 100m,
                 MidpointRounding.AwayFromZero);
         }
-
 
         private static decimal ConvertirDecimal(
             long centavos)

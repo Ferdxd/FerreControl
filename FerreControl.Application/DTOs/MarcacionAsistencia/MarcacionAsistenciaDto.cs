@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FerreControl.Application.DTOs.MarcacionAsistencia
+﻿namespace FerreControl.Application.DTOs.MarcacionAsistencia
 {
     public class MarcacionAsistenciaDto
     {
@@ -12,7 +6,17 @@ namespace FerreControl.Application.DTOs.MarcacionAsistencia
 
         public int EmpleadoID { get; set; }
 
+        public int? EmpleadoCredencialID { get; set; }
+
         public int? EmpleadoHorarioID { get; set; }
+
+
+        public string CodigoEmpleado { get; set; }
+            = string.Empty;
+
+        public string NombreEmpleado { get; set; }
+            = string.Empty;
+
 
         public DateTime FechaHora { get; set; }
 

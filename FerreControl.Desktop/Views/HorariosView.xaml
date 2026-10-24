@@ -15,7 +15,9 @@
         </Grid.RowDefinitions>
 
 
-        <!-- CABECERA -->
+        <!-- ====================================================== -->
+        <!-- CABECERA                                               -->
+        <!-- ====================================================== -->
 
         <Grid>
 
@@ -34,8 +36,9 @@
                     Text="Horarios"
                     Style="{StaticResource PageTitleStyle}"/>
 
+
                 <TextBlock
-                    Text="Configura jornadas laborales, tolerancias y días de descanso."
+                    Text="Configura jornadas laborales y asigna los horarios a los empleados."
                     Foreground="{StaticResource TextSecondaryBrush}"
                     FontSize="13"
                     Margin="0,6,0,0"/>
@@ -54,7 +57,9 @@
         </Grid>
 
 
-        <!-- RESUMEN -->
+        <!-- ====================================================== -->
+        <!-- RESUMEN                                                -->
+        <!-- ====================================================== -->
 
         <Grid
             Grid.Row="1"
@@ -64,16 +69,22 @@
 
                 <ColumnDefinition Width="*"/>
 
-                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="12"/>
 
                 <ColumnDefinition Width="*"/>
 
-                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="12"/>
+
+                <ColumnDefinition Width="*"/>
+
+                <ColumnDefinition Width="12"/>
 
                 <ColumnDefinition Width="*"/>
 
             </Grid.ColumnDefinitions>
 
+
+            <!-- HORARIOS ACTIVOS -->
 
             <Border
                 Grid.Column="0"
@@ -87,11 +98,12 @@
                         FontSize="10"
                         FontWeight="Bold"/>
 
+
                     <TextBlock
                         x:Name="txtHorariosActivos"
                         Text="--"
                         Foreground="White"
-                        FontSize="30"
+                        FontSize="28"
                         FontWeight="SemiBold"
                         Margin="0,6,0,0"/>
 
@@ -99,6 +111,8 @@
 
             </Border>
 
+
+            <!-- EMPLEADOS ASIGNADOS -->
 
             <Border
                 Grid.Column="2"
@@ -107,16 +121,17 @@
                 <StackPanel>
 
                     <TextBlock
-                        Text="EMPLEADOS ASIGNADOS"
+                        Text="CON HORARIO"
                         Foreground="#64748B"
                         FontSize="10"
                         FontWeight="Bold"/>
 
+
                     <TextBlock
                         x:Name="txtEmpleadosAsignados"
                         Text="--"
-                        Foreground="{StaticResource AccentLightBrush}"
-                        FontSize="30"
+                        Foreground="{StaticResource SuccessBrush}"
+                        FontSize="28"
                         FontWeight="SemiBold"
                         Margin="0,6,0,0"/>
 
@@ -125,8 +140,38 @@
             </Border>
 
 
+            <!-- SIN HORARIO -->
+
             <Border
                 Grid.Column="4"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="SIN HORARIO"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+
+                    <TextBlock
+                        x:Name="txtEmpleadosSinHorario"
+                        Text="--"
+                        Foreground="{StaticResource WarningBrush}"
+                        FontSize="28"
+                        FontWeight="SemiBold"
+                        Margin="0,6,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <!-- TOLERANCIA -->
+
+            <Border
+                Grid.Column="6"
                 Style="{StaticResource CardStyle}">
 
                 <StackPanel>
@@ -137,16 +182,18 @@
                         FontSize="10"
                         FontWeight="Bold"/>
 
+
                     <StackPanel
                         Orientation="Horizontal">
 
                         <TextBlock
                             x:Name="txtToleranciaPromedio"
                             Text="--"
-                            Foreground="{StaticResource WarningBrush}"
-                            FontSize="30"
+                            Foreground="{StaticResource AccentLightBrush}"
+                            FontSize="28"
                             FontWeight="SemiBold"
                             Margin="0,6,5,0"/>
+
 
                         <TextBlock
                             Text="min"
@@ -163,7 +210,9 @@
         </Grid>
 
 
-        <!-- CONTENIDO -->
+        <!-- ====================================================== -->
+        <!-- CONTENIDO                                              -->
+        <!-- ====================================================== -->
 
         <Grid
             Grid.Row="2"
@@ -171,7 +220,7 @@
 
             <Grid.ColumnDefinitions>
 
-                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="300"/>
 
                 <ColumnDefinition Width="18"/>
 
@@ -180,7 +229,9 @@
             </Grid.ColumnDefinitions>
 
 
-            <!-- LISTA DE HORARIOS -->
+            <!-- ================================================== -->
+            <!-- LISTADO DE HORARIOS                                -->
+            <!-- ================================================== -->
 
             <Border
                 Grid.Column="0"
@@ -261,10 +312,12 @@
                                                     Foreground="{StaticResource TextSecondaryBrush}"
                                                     FontSize="11"/>
 
+
                                                 <TextBlock
                                                     Text="{Binding ToleranciaMinutos}"
                                                     Foreground="{StaticResource TextSecondaryBrush}"
                                                     FontSize="11"/>
+
 
                                                 <TextBlock
                                                     Text=" min"
@@ -299,7 +352,9 @@
             </Border>
 
 
-            <!-- DETALLE -->
+            <!-- ================================================== -->
+            <!-- DETALLE                                            -->
+            <!-- ================================================== -->
 
             <Border
                 Grid.Column="2"
@@ -315,10 +370,16 @@
 
                         <RowDefinition Height="*"/>
 
+                        <RowDefinition Height="18"/>
+
+                        <RowDefinition Height="*"/>
+
                     </Grid.RowDefinitions>
 
 
-                    <!-- ENCABEZADO -->
+                    <!-- ========================================= -->
+                    <!-- ENCABEZADO                                -->
+                    <!-- ========================================= -->
 
                     <Grid>
 
@@ -338,8 +399,9 @@
                                 Text="Detalle del horario"
                                 Style="{StaticResource SectionTitleStyle}"/>
 
+
                             <TextBlock
-                                Text="Configuración semanal"
+                                Text="Configuración semanal y empleados asignados"
                                 Foreground="{StaticResource TextSecondaryBrush}"
                                 FontSize="12"
                                 Margin="0,4,0,0"/>
@@ -347,18 +409,35 @@
                         </StackPanel>
 
 
-                        <Button
-                            x:Name="btnEditarHorario"
+                        <StackPanel
                             Grid.Column="1"
-                            Content="Editar horario"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnEditarHorario_Click"/>
+                            Orientation="Horizontal">
+
+
+                            <Button
+                                x:Name="btnAsignarEmpleado"
+                                Content="+ Asignar empleado"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                IsEnabled="False"
+                                Margin="0,0,10,0"
+                                Click="BtnAsignarEmpleado_Click"/>
+
+
+                            <Button
+                                x:Name="btnEditarHorario"
+                                Content="Editar horario"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                IsEnabled="False"
+                                Click="BtnEditarHorario_Click"/>
+
+                        </StackPanel>
 
                     </Grid>
 
 
-                    <!-- DATOS GENERALES -->
+                    <!-- ========================================= -->
+                    <!-- DATOS GENERALES                           -->
+                    <!-- ========================================= -->
 
                     <Border
                         Grid.Row="1"
@@ -379,15 +458,18 @@
 
                                 <ColumnDefinition Width="*"/>
 
+                                <ColumnDefinition Width="*"/>
+
                             </Grid.ColumnDefinitions>
 
 
                             <StackPanel>
 
                                 <TextBlock
-                                    Text="Nombre"
+                                    Text="NOMBRE"
                                     Foreground="#64748B"
                                     FontSize="10"/>
+
 
                                 <TextBlock
                                     x:Name="txtNombreHorario"
@@ -402,9 +484,10 @@
                             <StackPanel Grid.Column="1">
 
                                 <TextBlock
-                                    Text="Tolerancia"
+                                    Text="TOLERANCIA"
                                     Foreground="#64748B"
                                     FontSize="10"/>
+
 
                                 <TextBlock
                                     x:Name="txtToleranciaHorario"
@@ -419,9 +502,28 @@
                             <StackPanel Grid.Column="2">
 
                                 <TextBlock
-                                    Text="Estado"
+                                    Text="EMPLEADOS"
                                     Foreground="#64748B"
                                     FontSize="10"/>
+
+
+                                <TextBlock
+                                    x:Name="txtEmpleadosHorario"
+                                    Text="--"
+                                    Foreground="{StaticResource AccentLightBrush}"
+                                    FontWeight="SemiBold"
+                                    Margin="0,4,0,0"/>
+
+                            </StackPanel>
+
+
+                            <StackPanel Grid.Column="3">
+
+                                <TextBlock
+                                    Text="ESTADO"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
+
 
                                 <TextBlock
                                     x:Name="txtEstadoHorario"
@@ -437,44 +539,163 @@
                     </Border>
 
 
-                    <!-- SEMANA -->
+                    <!-- ========================================= -->
+                    <!-- CONFIGURACIÓN SEMANAL                     -->
+                    <!-- ========================================= -->
 
-                    <DataGrid
-                        x:Name="dgHorarioDetalle"
-                        Grid.Row="2"
-                        Style="{StaticResource DarkDataGridStyle}"
-                        IsReadOnly="True">
+                    <Grid Grid.Row="2">
 
-                        <DataGrid.Columns>
+                        <Grid.RowDefinitions>
 
-                            <DataGridTextColumn
-                                Header="Día"
-                                Binding="{Binding Dia}"
-                                Width="*"/>
+                            <RowDefinition Height="Auto"/>
 
-                            <DataGridCheckBoxColumn
-                                Header="Laboral"
-                                Binding="{Binding EsLaboral, Mode=OneWay}"
-                                Width="100"/>
+                            <RowDefinition Height="*"/>
 
-                            <DataGridTextColumn
-                                Header="Entrada"
-                                Binding="{Binding Entrada}"
-                                Width="120"/>
+                        </Grid.RowDefinitions>
 
-                            <DataGridTextColumn
-                                Header="Salida"
-                                Binding="{Binding Salida}"
-                                Width="120"/>
 
-                            <DataGridTextColumn
-                                Header="Descanso"
-                                Binding="{Binding MinutosDescanso}"
-                                Width="120"/>
+                        <TextBlock
+                            Text="Configuración semanal"
+                            Foreground="White"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Margin="0,0,0,10"/>
 
-                        </DataGrid.Columns>
 
-                    </DataGrid>
+                        <DataGrid
+                            x:Name="dgHorarioDetalle"
+                            Grid.Row="1"
+                            Style="{StaticResource DarkDataGridStyle}"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True">
+
+                            <DataGrid.Columns>
+
+
+                                <DataGridTextColumn
+                                    Header="Día"
+                                    Binding="{Binding Dia}"
+                                    Width="*"/>
+
+
+                                <DataGridCheckBoxColumn
+                                    Header="Laboral"
+                                    Binding="{Binding EsLaboral,
+                                    Mode=OneWay}"
+                                    Width="80"/>
+
+
+                                <DataGridTextColumn
+                                    Header="Entrada"
+                                    Binding="{Binding Entrada}"
+                                    Width="100"/>
+
+
+                                <DataGridTextColumn
+                                    Header="Salida"
+                                    Binding="{Binding Salida}"
+                                    Width="100"/>
+
+
+                                <DataGridTextColumn
+                                    Header="Descanso"
+                                    Binding="{Binding Descanso}"
+                                    Width="100"/>
+
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+
+                    </Grid>
+
+
+                    <!-- ========================================= -->
+                    <!-- EMPLEADOS ASIGNADOS                       -->
+                    <!-- ========================================= -->
+
+                    <Grid Grid.Row="4">
+
+                        <Grid.RowDefinitions>
+
+                            <RowDefinition Height="Auto"/>
+
+                            <RowDefinition Height="*"/>
+
+                        </Grid.RowDefinitions>
+
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+
+                                <ColumnDefinition Width="*"/>
+
+                                <ColumnDefinition Width="Auto"/>
+
+                            </Grid.ColumnDefinitions>
+
+
+                            <TextBlock
+                                Text="Empleados con este horario"
+                                Foreground="White"
+                                FontSize="13"
+                                FontWeight="SemiBold"
+                                VerticalAlignment="Center"/>
+
+
+                            <TextBlock
+                                x:Name="txtSinEmpleadosHorario"
+                                Grid.Column="1"
+                                Text=""
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                FontSize="11"
+                                VerticalAlignment="Center"/>
+
+                        </Grid>
+
+
+                        <DataGrid
+                            x:Name="dgEmpleadosHorario"
+                            Grid.Row="1"
+                            Style="{StaticResource DarkDataGridStyle}"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            Margin="0,10,0,0"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow">
+
+                            <DataGrid.Columns>
+
+
+                                <DataGridTextColumn
+                                    Header="Código"
+                                    Binding="{Binding Codigo}"
+                                    Width="90"/>
+
+
+                                <DataGridTextColumn
+                                    Header="Empleado"
+                                    Binding="{Binding Empleado}"
+                                    Width="*"/>
+
+
+                                <DataGridTextColumn
+                                    Header="Puesto"
+                                    Binding="{Binding Puesto}"
+                                    Width="150"/>
+
+
+                                <DataGridTextColumn
+                                    Header="Asignado desde"
+                                    Binding="{Binding FechaInicio,
+                                    StringFormat=dd/MM/yyyy}"
+                                    Width="120"/>
+
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+
+                    </Grid>
 
                 </Grid>
 

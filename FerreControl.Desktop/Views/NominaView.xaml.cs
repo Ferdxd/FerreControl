@@ -411,14 +411,19 @@ namespace FerreControl.Desktop.Views
         {
             ActualizarDisponibilidadOperaciones();
         }
-
-
         private void ActualizarDisponibilidadOperaciones()
         {
+            // =====================================================
+            // DESHABILITAR TODO
+            // =====================================================
+
             btnAgregarEmpleado.IsEnabled =
                 false;
 
-            btnAplicarAdelanto.IsEnabled =
+            btnDarAdelanto.IsEnabled =
+                false;
+
+            btnHistorialAdelantos.IsEnabled =
                 false;
 
             btnGenerarNomina.IsEnabled =
@@ -436,6 +441,11 @@ namespace FerreControl.Desktop.Views
 
             if (_nominaSeleccionada == null)
                 return;
+
+
+            var detalleSeleccionado =
+                dgNominaDetalle.SelectedItem
+                as NominaDetalleFila;
 
 
             bool borrador =
@@ -459,22 +469,51 @@ namespace FerreControl.Desktop.Views
                     StringComparison.OrdinalIgnoreCase);
 
 
+            // =====================================================
+            // ACCIONES DEL EMPLEADO
+            // =====================================================
+
+            if (detalleSeleccionado != null)
+            {
+                /*
+                 * Registrar un adelanto es independiente
+                 * de la nómina seleccionada.
+                 *
+                 * Incluso desde una nómina GENERADA/CERRADA
+                 * se puede registrar un nuevo adelanto.
+                 *
+                 * Lo que NO se podrá hacer es aplicarlo
+                 * a esa nómina.
+                 */
+
+                btnDarAdelanto.IsEnabled =
+                    true;
+
+
+                btnHistorialAdelantos.IsEnabled =
+                    true;
+            }
+
+
+            // =====================================================
+            // CERRADA
+            // =====================================================
+
             if (cerrada)
             {
-                if (dgNominaDetalle.SelectedItem
-                    is NominaDetalleFila detalleCerrado)
+                if (detalleSeleccionado != null)
                 {
                     btnVerPagos.IsEnabled =
-                        detalleCerrado.TotalPagado > 0;
+                        detalleSeleccionado.TotalPagado > 0;
                 }
 
                 return;
             }
 
 
-            // ---------------------------------------------
-            // NÓMINA BORRADOR
-            // ---------------------------------------------
+            // =====================================================
+            // BORRADOR
+            // =====================================================
 
             if (borrador)
             {
@@ -486,21 +525,13 @@ namespace FerreControl.Desktop.Views
                     _filasDetalle.Count > 0;
 
 
-                if (dgNominaDetalle.SelectedItem
-                    is NominaDetalleFila detalle)
-                {
-                    btnAplicarAdelanto.IsEnabled =
-                        detalle.TotalPagado == 0;
-                }
-
-
                 return;
             }
 
 
-            // ---------------------------------------------
-            // NÓMINA GENERADA
-            // ---------------------------------------------
+            // =====================================================
+            // GENERADA
+            // =====================================================
 
             if (generada)
             {
@@ -519,19 +550,17 @@ namespace FerreControl.Desktop.Views
                     todoPagado;
 
 
-                if (dgNominaDetalle.SelectedItem
-                    is NominaDetalleFila detalle)
+                if (detalleSeleccionado != null)
                 {
                     btnRegistrarPago.IsEnabled =
-                        detalle.Pendiente > 0;
+                        detalleSeleccionado.Pendiente > 0;
 
 
                     btnVerPagos.IsEnabled =
-                        detalle.TotalPagado > 0;
+                        detalleSeleccionado.TotalPagado > 0;
                 }
             }
         }
-
 
         // =====================================================
         // GENERAR NÓMINA
@@ -767,44 +796,7 @@ namespace FerreControl.Desktop.Views
                     _nominaSeleccionada.ID);
             }
         }
-
-
-        // =====================================================
-        // APLICAR ADELANTO
-        // =====================================================
-
-        private async void BtnAplicarAdelanto_Click(
-       object sender,
-       RoutedEventArgs e)
-        {
-            if (_nominaSeleccionada == null)
-                return;
-
-
-            if (dgNominaDetalle.SelectedItem
-                is not NominaDetalleFila detalle)
-            {
-                return;
-            }
-
-
-            var ventana =
-                new AplicarAdelantoWindow(
-                    detalle)
-                {
-                    Owner =
-                        Window.GetWindow(this)
-                };
-
-
-            if (ventana.ShowDialog() == true)
-            {
-                await CargarDetallesAsync(
-                    _nominaSeleccionada.ID);
-            }
-        }
-
-
+ 
         // =====================================================
         // REGISTRAR PAGO
         // =====================================================
@@ -930,6 +922,82 @@ namespace FerreControl.Desktop.Views
             ActualizarDisponibilidadOperaciones();
         }
 
+        private async void BtnDarAdelanto_Click(
+    object sender,
+    RoutedEventArgs e)
+        {
+            if (_nominaSeleccionada == null)
+                return;
+
+
+            if (dgNominaDetalle.SelectedItem
+                is not NominaDetalleFila detalle)
+            {
+                MessageBox.Show(
+                    "Seleccione primero un empleado.",
+                    "FerreControl",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                return;
+            }
+
+
+            bool permiteAplicarNomina =
+                string.Equals(
+                    _nominaSeleccionada.Estado,
+                    "BORRADOR",
+                    StringComparison.OrdinalIgnoreCase);
+
+
+            var ventana =
+                new AdelantoFormWindow(
+                    detalle,
+                    permiteAplicarNomina)
+                {
+                    Owner =
+                        Window.GetWindow(this)
+                };
+
+
+            if (ventana.ShowDialog() == true)
+            {
+                /*
+                 * Solo recargamos el detalle si realmente
+                 * se aplicó dinero a esta nómina.
+                 */
+
+                if (ventana.HuboCambiosNomina)
+                {
+                    await CargarDetallesAsync(
+                        _nominaSeleccionada.ID);
+                }
+            }
+        }
+
+        private void BtnHistorialAdelantos_Click(
+    object sender,
+    RoutedEventArgs e)
+        {
+            if (dgNominaDetalle.SelectedItem
+                is not NominaDetalleFila detalle)
+            {
+                return;
+            }
+
+
+            var ventana =
+                new AdelantosEmpleadoFormWindow(
+                    detalle.EmpleadoID,
+                    detalle.Empleado)
+                {
+                    Owner =
+                        Window.GetWindow(this)
+                };
+
+
+            ventana.ShowDialog();
+        }
 
     }
 }

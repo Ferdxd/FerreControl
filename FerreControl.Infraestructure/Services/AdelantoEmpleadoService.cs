@@ -112,10 +112,8 @@ public class AdelantoEmpleadoService
     }
 
 
-    public async Task<AdelantoEmpleadoDto>
-        CrearAsync(
-            int empleadoId,
-            CrearAdelantoEmpleadoDto dto)
+
+  public async Task<AdelantoEmpleadoDto>CrearAsync( int empleadoId, CrearAdelantoEmpleadoDto dto)
     {
         var empleado =
             await _empleadoRepository
@@ -124,30 +122,38 @@ public class AdelantoEmpleadoService
 
 
         if (empleado == null)
+        {
             throw new InvalidOperationException(
                 "Empleado no encontrado.");
+        }
 
 
         if (!empleado.Estado)
+        {
             throw new InvalidOperationException(
                 "No se puede registrar un adelanto a un empleado inactivo.");
+        }
 
 
         if (dto.Monto <= 0)
+        {
             throw new InvalidOperationException(
                 "El monto del adelanto debe ser mayor a cero.");
+        }
 
 
         if (dto.FechaAdelanto == default)
-            throw new InvalidOperationException(
-                "Debe indicar la fecha del adelanto.");
-
-
-        if (dto.FechaAdelanto.Date >
-            DateTime.Today)
         {
             throw new InvalidOperationException(
-                "La fecha del adelanto no puede ser futura.");
+                "Debe indicar la fecha y hora del adelanto.");
+        }
+
+
+        if (dto.FechaAdelanto >
+            DateTime.Now.AddMinutes(1))
+        {
+            throw new InvalidOperationException(
+                "La fecha y hora del adelanto no pueden ser futuras.");
         }
 
 
@@ -169,22 +175,38 @@ public class AdelantoEmpleadoService
                     A_Centavos(
                         dto.Monto),
 
+
+                // ================================================
+                // NO USAR .Date
+                // Conservamos fecha y hora de entrega.
+                // ================================================
+
                 FechaAdelanto =
-                    dto.FechaAdelanto.Date,
+                    dto.FechaAdelanto,
+
 
                 MetodoEntrega =
                     dto.MetodoEntrega
                         .Trim()
                         .ToUpper(),
 
+
                 Referencia =
-                    dto.Referencia?.Trim(),
+                    dto.Referencia?
+                        .Trim(),
+
 
                 Observacion =
-                    dto.Observacion?.Trim(),
+                    dto.Observacion?
+                        .Trim(),
+
 
                 Estado =
                     EstadosAdelanto.PENDIENTE,
+
+
+                // Fecha/hora real en que FerreControl
+                // creó el registro.
 
                 FechaCreacion =
                     DateTime.Now
@@ -200,7 +222,6 @@ public class AdelantoEmpleadoService
             adelanto,
             0);
     }
-
 
     public async Task<AdelantoEmpleadoDto>
         AnularAsync(

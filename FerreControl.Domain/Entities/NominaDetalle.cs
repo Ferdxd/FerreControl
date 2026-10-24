@@ -1,5 +1,6 @@
-﻿using FerreControl.Domain.Entities;
+﻿
 
+namespace FerreControl.Domain.Entities;
 public class NominaDetalle
 {
     public int ID { get; set; }

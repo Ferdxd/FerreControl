@@ -15,43 +15,26 @@ namespace FerreControl.Infraestructure.Services
             _detalleRepository;
 
 
-        public PagoNominaService(
-            IPagoNominaRepository pagoRepository,
-            INominaDetalleRepository detalleRepository)
+        public PagoNominaService(IPagoNominaRepository pagoRepository,INominaDetalleRepository detalleRepository)
         {
-            _pagoRepository =
-                pagoRepository;
+            _pagoRepository =pagoRepository;
 
-            _detalleRepository =
-                detalleRepository;
+            _detalleRepository =detalleRepository;
         }
 
 
-        public async Task<List<PagoNominaDto>>
-            ObtenerPorDetalleAsync(
-                int nominaDetalleId)
+        public async Task<List<PagoNominaDto>>ObtenerPorDetalleAsync(int nominaDetalleId)
         {
-            var pagos =
-                await _pagoRepository
-                    .ObtenerPorDetalleAsync(
-                        nominaDetalleId);
-
-
+            var pagos =await _pagoRepository.ObtenerPorDetalleAsync(nominaDetalleId);
             return pagos
                 .Select(MapearDto)
                 .ToList();
         }
 
 
-        public async Task<PagoNominaDto>
-            RegistrarAsync(
-                int nominaDetalleId,
-                CrearPagoNominaDto dto)
+        public async Task<PagoNominaDto>RegistrarAsync(int nominaDetalleId,CrearPagoNominaDto dto)
         {
-            var detalle =
-                await _detalleRepository
-                    .ObtenerPorIdAsync(
-                        nominaDetalleId);
+            var detalle =await _detalleRepository.ObtenerPorIdAsync(nominaDetalleId);
 
             if (detalle == null)
             {
@@ -75,19 +58,13 @@ namespace FerreControl.Infraestructure.Services
             }
 
 
-            long montoCentavos =
-                ConvertirCentavos(dto.Monto);
+            long montoCentavos =ConvertirCentavos(dto.Monto);
 
 
-            long pagado =
-                await _pagoRepository
-                    .ObtenerTotalPagadoCentavosAsync(
-                        nominaDetalleId);
+            long pagado =await _pagoRepository.ObtenerTotalPagadoCentavosAsync(nominaDetalleId);
 
 
-            long pendiente =
-                detalle.TotalPagarCentavos -
-                pagado;
+            long pendiente =detalle.TotalPagarCentavos -pagado;
 
 
             if (pendiente <= 0)
@@ -106,45 +83,34 @@ namespace FerreControl.Infraestructure.Services
 
             var pago = new PagoNomina
             {
-                NominaDetalleID =
-                    nominaDetalleId,
+                NominaDetalleID =nominaDetalleId,
 
-                MontoCentavos =
-                    montoCentavos,
+                MontoCentavos =montoCentavos,
 
-                FechaPago =
-                    dto.FechaPago,
+                FechaPago =dto.FechaPago,
 
-                MetodoPago =
-                    dto.MetodoPago.Trim(),
+                MetodoPago =dto.MetodoPago.Trim(),
 
-                Referencia =
-                    dto.Referencia?.Trim(),
+                Referencia =dto.Referencia?.Trim(),
 
-                Observacion =
-                    dto.Observacion?.Trim(),
+                Observacion =dto.Observacion?.Trim(),
 
                 Estado = true,
 
-                FechaCreacion =
-                    DateTime.Now
+                FechaCreacion =DateTime.Now
             };
 
 
-            await _pagoRepository
-                .AgregarAsync(pago);
+            await _pagoRepository.AgregarAsync(pago);
 
 
             return MapearDto(pago);
         }
 
 
-        public async Task<PagoNominaDto>
-            AnularAsync(int id)
+        public async Task<PagoNominaDto>AnularAsync(int id)
         {
-            var pago =
-                await _pagoRepository
-                    .ObtenerPorIdAsync(id);
+            var pago =await _pagoRepository.ObtenerPorIdAsync(id);
 
             if (pago == null)
             {
@@ -163,8 +129,7 @@ namespace FerreControl.Infraestructure.Services
             pago.Estado = false;
 
 
-            await _pagoRepository
-                .ActualizarAsync(pago);
+            await _pagoRepository.ActualizarAsync(pago);
 
 
             return MapearDto(pago);

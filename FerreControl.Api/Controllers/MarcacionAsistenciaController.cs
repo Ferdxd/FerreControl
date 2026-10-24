@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using FerreControl.Application.DTOs.MarcacionAsistencia;
+﻿using FerreControl.Application.DTOs.MarcacionAsistencia;
 using FerreControl.Application.Interfaces.IService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FerreControl.Api.Controllers
 {
@@ -17,48 +16,147 @@ namespace FerreControl.Api.Controllers
         public MarcacionesController(
             IMarcacionAsistenciaService service)
         {
-            _service = service;
+            _service =
+                service;
         }
 
 
+        // =====================================================
+        // MARCACIÓN EXPLÍCITA
+        // =====================================================
+
         [HttpPost]
-        public async Task<ActionResult<
-            MarcacionAsistenciaDto>>
+        public async Task<ActionResult<MarcacionAsistenciaDto>>
             Registrar(
                 RegistrarMarcacionDto dto)
         {
             try
             {
-                var marcacion =
+                var resultado =
                     await _service
-                        .RegistrarAsync(dto);
+                        .RegistrarAsync(
+                            dto);
+
 
                 return StatusCode(
                     StatusCodes.Status201Created,
-                    marcacion);
+                    resultado);
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(
+                    ex.Message);
             }
         }
 
 
-        [HttpGet(
-            "empleado/{empleadoId:int}")]
-        public async Task<ActionResult<
-            List<MarcacionAsistenciaDto>>>
+        // =====================================================
+        // MARCAJE AUTOMÁTICO
+        // =====================================================
+
+        [HttpPost("automatico")]
+        public async Task<ActionResult<MarcacionAsistenciaDto>>
+            RegistrarAutomatico(
+                RegistrarMarcacionAutomaticaDto dto)
+        {
+            try
+            {
+                var resultado =
+                    await _service
+                        .RegistrarAutomaticoAsync(
+                            dto);
+
+
+                return StatusCode(
+                    StatusCodes.Status201Created,
+                    resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
+        }
+
+
+        // =====================================================
+        // REGISTRO MANUAL
+        // =====================================================
+
+        [HttpPost("manual")]
+        public async Task<ActionResult<List<MarcacionAsistenciaDto>>>
+            RegistrarManual(
+                RegistrarAsistenciaManualDto dto)
+        {
+            try
+            {
+                var resultado =
+                    await _service
+                        .RegistrarManualAsync(
+                            dto);
+
+
+                return StatusCode(
+                    StatusCodes.Status201Created,
+                    resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
+        }
+
+
+        // =====================================================
+        // MARCACIONES DEL EMPLEADO
+        // =====================================================
+
+        [HttpGet("empleado/{empleadoId:int}")]
+        public async Task<ActionResult<List<MarcacionAsistenciaDto>>>
             Obtener(
                 int empleadoId,
                 [FromQuery] DateTime fecha)
         {
+            try
+            {
+                var resultado =
+                    await _service
+                        .ObtenerPorEmpleadoYFechaAsync(
+                            empleadoId,
+                            fecha);
+
+
+                return Ok(
+                    resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
+        }
+
+
+        // =====================================================
+        // RESUMEN DE ASISTENCIA
+        // =====================================================
+
+        [HttpGet("resumen")]
+        public async Task<ActionResult<List<AsistenciaDiariaDto>>>
+            ObtenerResumen(
+                [FromQuery] int negocioId,
+                [FromQuery] DateTime fecha)
+        {
             var resultado =
                 await _service
-                    .ObtenerPorEmpleadoYFechaAsync(
-                        empleadoId,
+                    .ObtenerResumenDiarioAsync(
+                        negocioId,
                         fecha);
 
-            return Ok(resultado);
+
+            return Ok(
+                resultado);
         }
     }
 }

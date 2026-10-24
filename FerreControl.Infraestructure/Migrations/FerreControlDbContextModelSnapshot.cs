@@ -231,6 +231,39 @@ namespace FerreControl.Infraestructure.Migrations
                     b.ToTable("EmpleadosHorarios");
                 });
 
+            modelBuilder.Entity("FerreControl.Domain.Entities.EmpleadoReglaHoraExtra", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmpleadoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("FechaFin")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ReglaHoraExtraID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ReglaHoraExtraID");
+
+                    b.HasIndex("EmpleadoID", "FechaInicio");
+
+                    b.ToTable("EmpleadosReglasHoraExtra");
+                });
+
             modelBuilder.Entity("FerreControl.Domain.Entities.Horario", b =>
                 {
                     b.Property<int>("ID")
@@ -392,78 +425,7 @@ namespace FerreControl.Infraestructure.Migrations
                     b.ToTable("Nominas");
                 });
 
-            modelBuilder.Entity("FerreControl.Domain.Entities.PagoNomina", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("FechaPago")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MetodoPago")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("MontoCentavos")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("NominaDetalleID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Observacion")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Referencia")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("NominaDetalleID");
-
-                    b.ToTable("PagosNomina");
-                });
-
-            modelBuilder.Entity("FerreControl.Domain.Entities.SalarioEmpleado", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EmpleadoID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("FechaFin")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("MontoCentavos")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Periodicidad")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EmpleadoID");
-
-                    b.ToTable("SalariosEmpleado");
-                });
-
-            modelBuilder.Entity("NominaDetalle", b =>
+            modelBuilder.Entity("FerreControl.Domain.Entities.NominaDetalle", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -526,6 +488,174 @@ namespace FerreControl.Infraestructure.Migrations
                     b.ToTable("NominasDetalle");
                 });
 
+            modelBuilder.Entity("FerreControl.Domain.Entities.PagoNomina", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetodoPago")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("MontoCentavos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NominaDetalleID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Observacion")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Referencia")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("NominaDetalleID");
+
+                    b.ToTable("PagosNomina");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.RegistroHoraExtra", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmpleadoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("EmpleadoReglaHoraExtraID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ExcedeLimite12Horas")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FechaCalculo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("FechaDecision")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MinutosAprobados")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MinutosCalculados")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("MontoCentavos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Observacion")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("TarifaHoraCentavos")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmpleadoReglaHoraExtraID");
+
+                    b.HasIndex("EmpleadoID", "Fecha")
+                        .IsUnique();
+
+                    b.ToTable("RegistrosHoraExtra");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.ReglaHoraExtra", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CuentaEntradaAnticipada")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NegocioID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("RequiereAprobacion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("TarifaHoraCentavos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TipoFraccion")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("NegocioID", "Nombre")
+                        .IsUnique();
+
+                    b.ToTable("ReglasHoraExtra");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.SalarioEmpleado", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmpleadoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("FechaFin")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("MontoCentavos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Periodicidad")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmpleadoID");
+
+                    b.ToTable("SalariosEmpleado");
+                });
+
             modelBuilder.Entity("FerreControl.Domain.Entities.AdelantoAplicacion", b =>
                 {
                     b.HasOne("FerreControl.Domain.Entities.AdelantoEmpleado", "AdelantoEmpleado")
@@ -534,7 +664,7 @@ namespace FerreControl.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("NominaDetalle", "NominaDetalle")
+                    b.HasOne("FerreControl.Domain.Entities.NominaDetalle", "NominaDetalle")
                         .WithMany("AdelantosAplicados")
                         .HasForeignKey("NominaDetalleID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -597,6 +727,25 @@ namespace FerreControl.Infraestructure.Migrations
                     b.Navigation("Horario");
                 });
 
+            modelBuilder.Entity("FerreControl.Domain.Entities.EmpleadoReglaHoraExtra", b =>
+                {
+                    b.HasOne("FerreControl.Domain.Entities.Empleado", "Empleado")
+                        .WithMany("ConfiguracionesHoraExtra")
+                        .HasForeignKey("EmpleadoID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FerreControl.Domain.Entities.ReglaHoraExtra", "ReglaHoraExtra")
+                        .WithMany("Asignaciones")
+                        .HasForeignKey("ReglaHoraExtraID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
+
+                    b.Navigation("ReglaHoraExtra");
+                });
+
             modelBuilder.Entity("FerreControl.Domain.Entities.Horario", b =>
                 {
                     b.HasOne("FerreControl.Domain.Entities.Negocio", "Negocio")
@@ -655,29 +804,7 @@ namespace FerreControl.Infraestructure.Migrations
                     b.Navigation("Negocio");
                 });
 
-            modelBuilder.Entity("FerreControl.Domain.Entities.PagoNomina", b =>
-                {
-                    b.HasOne("NominaDetalle", "NominaDetalle")
-                        .WithMany("Pagos")
-                        .HasForeignKey("NominaDetalleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NominaDetalle");
-                });
-
-            modelBuilder.Entity("FerreControl.Domain.Entities.SalarioEmpleado", b =>
-                {
-                    b.HasOne("FerreControl.Domain.Entities.Empleado", "Empleado")
-                        .WithMany("Salarios")
-                        .HasForeignKey("EmpleadoID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Empleado");
-                });
-
-            modelBuilder.Entity("NominaDetalle", b =>
+            modelBuilder.Entity("FerreControl.Domain.Entities.NominaDetalle", b =>
                 {
                     b.HasOne("FerreControl.Domain.Entities.Empleado", "Empleado")
                         .WithMany("Nominas")
@@ -702,6 +829,57 @@ namespace FerreControl.Infraestructure.Migrations
                     b.Navigation("SalarioEmpleado");
                 });
 
+            modelBuilder.Entity("FerreControl.Domain.Entities.PagoNomina", b =>
+                {
+                    b.HasOne("FerreControl.Domain.Entities.NominaDetalle", "NominaDetalle")
+                        .WithMany("Pagos")
+                        .HasForeignKey("NominaDetalleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NominaDetalle");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.RegistroHoraExtra", b =>
+                {
+                    b.HasOne("FerreControl.Domain.Entities.Empleado", "Empleado")
+                        .WithMany("RegistrosHoraExtra")
+                        .HasForeignKey("EmpleadoID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FerreControl.Domain.Entities.EmpleadoReglaHoraExtra", "EmpleadoReglaHoraExtra")
+                        .WithMany("Registros")
+                        .HasForeignKey("EmpleadoReglaHoraExtraID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Empleado");
+
+                    b.Navigation("EmpleadoReglaHoraExtra");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.ReglaHoraExtra", b =>
+                {
+                    b.HasOne("FerreControl.Domain.Entities.Negocio", "Negocio")
+                        .WithMany("ReglasHoraExtra")
+                        .HasForeignKey("NegocioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Negocio");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.SalarioEmpleado", b =>
+                {
+                    b.HasOne("FerreControl.Domain.Entities.Empleado", "Empleado")
+                        .WithMany("Salarios")
+                        .HasForeignKey("EmpleadoID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
+                });
+
             modelBuilder.Entity("FerreControl.Domain.Entities.AdelantoEmpleado", b =>
                 {
                     b.Navigation("Aplicaciones");
@@ -711,6 +889,8 @@ namespace FerreControl.Infraestructure.Migrations
                 {
                     b.Navigation("Adelantos");
 
+                    b.Navigation("ConfiguracionesHoraExtra");
+
                     b.Navigation("Credenciales");
 
                     b.Navigation("Horarios");
@@ -718,6 +898,8 @@ namespace FerreControl.Infraestructure.Migrations
                     b.Navigation("Marcaciones");
 
                     b.Navigation("Nominas");
+
+                    b.Navigation("RegistrosHoraExtra");
 
                     b.Navigation("Salarios");
                 });
@@ -730,6 +912,11 @@ namespace FerreControl.Infraestructure.Migrations
             modelBuilder.Entity("FerreControl.Domain.Entities.EmpleadoHorario", b =>
                 {
                     b.Navigation("Marcaciones");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.EmpleadoReglaHoraExtra", b =>
+                {
+                    b.Navigation("Registros");
                 });
 
             modelBuilder.Entity("FerreControl.Domain.Entities.Horario", b =>
@@ -746,6 +933,8 @@ namespace FerreControl.Infraestructure.Migrations
                     b.Navigation("Horarios");
 
                     b.Navigation("Nominas");
+
+                    b.Navigation("ReglasHoraExtra");
                 });
 
             modelBuilder.Entity("FerreControl.Domain.Entities.Nomina", b =>
@@ -753,16 +942,21 @@ namespace FerreControl.Infraestructure.Migrations
                     b.Navigation("Detalles");
                 });
 
-            modelBuilder.Entity("FerreControl.Domain.Entities.SalarioEmpleado", b =>
-                {
-                    b.Navigation("NominasDetalle");
-                });
-
-            modelBuilder.Entity("NominaDetalle", b =>
+            modelBuilder.Entity("FerreControl.Domain.Entities.NominaDetalle", b =>
                 {
                     b.Navigation("AdelantosAplicados");
 
                     b.Navigation("Pagos");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.ReglaHoraExtra", b =>
+                {
+                    b.Navigation("Asignaciones");
+                });
+
+            modelBuilder.Entity("FerreControl.Domain.Entities.SalarioEmpleado", b =>
+                {
+                    b.Navigation("NominasDetalle");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using FerreControl.Application.DTOs.EmpleadoCredencial;
 using FerreControl.Application.Interfaces.IService;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FerreControl.Api.Controllers
 {

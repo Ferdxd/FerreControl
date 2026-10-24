@@ -13,7 +13,9 @@
         </Grid.RowDefinitions>
 
 
-        <!-- CABECERA -->
+        <!-- ====================================================== -->
+        <!-- CABECERA                                               -->
+        <!-- ====================================================== -->
 
         <Grid>
 
@@ -32,8 +34,9 @@
                     Text="Registro de asistencia"
                     Style="{StaticResource PageTitleStyle}"/>
 
+
                 <TextBlock
-                    Text="Escanea la credencial del empleado para registrar su marcación."
+                    Text="Escanea la credencial. FerreControl determinará automáticamente la marcación correspondiente."
                     Foreground="{StaticResource TextSecondaryBrush}"
                     FontSize="13"
                     Margin="0,6,0,0"/>
@@ -50,13 +53,15 @@
                 Padding="14,7"
                 VerticalAlignment="Center">
 
-                <StackPanel Orientation="Horizontal">
+                <StackPanel
+                    Orientation="Horizontal">
 
                     <Ellipse
                         Width="8"
                         Height="8"
                         Fill="{StaticResource SuccessBrush}"
                         Margin="0,0,8,0"/>
+
 
                     <TextBlock
                         Text="LECTOR LISTO"
@@ -71,7 +76,9 @@
         </Grid>
 
 
-        <!-- CONTENIDO -->
+        <!-- ====================================================== -->
+        <!-- CONTENIDO                                              -->
+        <!-- ====================================================== -->
 
         <Grid
             Grid.Row="1"
@@ -88,7 +95,9 @@
             </Grid.ColumnDefinitions>
 
 
-            <!-- MARCAJE PRINCIPAL -->
+            <!-- ================================================== -->
+            <!-- MARCAJE PRINCIPAL                                  -->
+            <!-- ================================================== -->
 
             <Border
                 Grid.Column="0"
@@ -107,6 +116,8 @@
                     </Grid.RowDefinitions>
 
 
+                    <!-- RELOJ -->
+
                     <StackPanel
                         HorizontalAlignment="Center">
 
@@ -117,17 +128,20 @@
                             FontWeight="Bold"
                             HorizontalAlignment="Center"/>
 
+
                         <TextBlock
                             x:Name="txtHoraMarcaje"
-                            Text="07:02:15"
+                            Text="--:--:--"
                             Foreground="White"
                             FontSize="54"
                             FontWeight="Light"
                             HorizontalAlignment="Center"
                             Margin="0,8,0,0"/>
 
+
                         <TextBlock
-                            Text="Miércoles, 07 de octubre de 2026"
+                            x:Name="txtFechaMarcaje"
+                            Text="--"
                             Foreground="{StaticResource TextSecondaryBrush}"
                             FontSize="14"
                             HorizontalAlignment="Center"
@@ -135,6 +149,8 @@
 
                     </StackPanel>
 
+
+                    <!-- LECTOR -->
 
                     <StackPanel
                         Grid.Row="1"
@@ -167,12 +183,45 @@
                             FontSize="23"
                             HorizontalAlignment="Center"/>
 
+
                         <TextBlock
-                            Text="El registro se realizará automáticamente."
+                            Text="La entrada, descanso o salida se determinará automáticamente."
                             Foreground="{StaticResource TextSecondaryBrush}"
                             FontSize="13"
                             HorizontalAlignment="Center"
-                            Margin="0,8,0,20"/>
+                            Margin="0,8,0,22"/>
+
+
+                        <TextBlock
+                            Text="TIPO DE CREDENCIAL"
+                            Foreground="#64748B"
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Margin="0,0,0,6"/>
+
+
+                        <ComboBox
+                            x:Name="cmbTipoCredencial"
+                            Style="{StaticResource ModernComboBoxStyle}"
+                            Margin="0,0,0,12">
+
+                            <ComboBoxItem
+                                Content="Código de barras"
+                                Tag="CODIGO_BARRAS"/>
+
+                            <ComboBoxItem
+                                Content="QR"
+                                Tag="QR"/>
+
+                            <ComboBoxItem
+                                Content="RFID"
+                                Tag="RFID"/>
+
+                            <ComboBoxItem
+                                Content="Huella / identificador"
+                                Tag="HUELLA"/>
+
+                        </ComboBox>
 
 
                         <TextBox
@@ -182,11 +231,12 @@
                             FontSize="20"
                             TextAlignment="Center"
                             VerticalContentAlignment="Center"
-                            MaxLength="150"/>
+                            MaxLength="150"
+                            PreviewKeyDown="TxtCodigoMarcaje_PreviewKeyDown"/>
 
 
                         <TextBlock
-                            Text="Compatible con código de barras, QR y otros lectores tipo teclado."
+                            Text="Los lectores tipo teclado normalmente envían ENTER después de leer el código."
                             Foreground="#64748B"
                             FontSize="11"
                             HorizontalAlignment="Center"
@@ -205,7 +255,8 @@
                         CornerRadius="8"
                         Padding="14">
 
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel
+                            Orientation="Horizontal">
 
                             <Ellipse
                                 Width="9"
@@ -214,11 +265,13 @@
                                 VerticalAlignment="Center"
                                 Margin="0,0,10,0"/>
 
+
                             <TextBlock
                                 x:Name="txtEstadoMarcaje"
                                 Text="Esperando lectura de credencial..."
                                 Foreground="{StaticResource TextSecondaryBrush}"
-                                VerticalAlignment="Center"/>
+                                VerticalAlignment="Center"
+                                TextWrapping="Wrap"/>
 
                         </StackPanel>
 
@@ -229,7 +282,9 @@
             </Border>
 
 
-            <!-- ÚLTIMA MARCACIÓN -->
+            <!-- ================================================== -->
+            <!-- ÚLTIMA MARCACIÓN                                  -->
+            <!-- ================================================== -->
 
             <Border
                 Grid.Column="2"
@@ -241,8 +296,9 @@
                         Text="Última marcación"
                         Style="{StaticResource SectionTitleStyle}"/>
 
+
                     <TextBlock
-                        Text="Información del último empleado registrado"
+                        Text="Información del último empleado registrado."
                         Foreground="{StaticResource TextSecondaryBrush}"
                         FontSize="12"
                         Margin="0,5,0,28"/>
@@ -273,6 +329,7 @@
                         Foreground="White"
                         FontSize="20"
                         FontWeight="SemiBold"
+                        TextWrapping="Wrap"
                         Margin="0,18,0,0"/>
 
 
@@ -294,6 +351,7 @@
                         Foreground="#64748B"
                         FontSize="11"/>
 
+
                     <TextBlock
                         x:Name="txtTipoMarcacion"
                         Text="--"
@@ -304,9 +362,24 @@
 
 
                     <TextBlock
+                        Text="Método"
+                        Foreground="#64748B"
+                        FontSize="11"/>
+
+
+                    <TextBlock
+                        x:Name="txtMetodoMarcacion"
+                        Text="--"
+                        Foreground="White"
+                        FontSize="13"
+                        Margin="0,4,0,18"/>
+
+
+                    <TextBlock
                         Text="Hora registrada"
                         Foreground="#64748B"
                         FontSize="11"/>
+
 
                     <TextBlock
                         x:Name="txtHoraRegistrada"

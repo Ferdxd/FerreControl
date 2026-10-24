@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FerreControl.Domain.Entities;
+﻿using FerreControl.Domain.Entities;
 
 namespace FerreControl.Application.Interfaces.IRepository
 {
@@ -14,12 +9,23 @@ namespace FerreControl.Application.Interfaces.IRepository
                 int empleadoId,
                 DateTime fecha);
 
+
+        Task<List<MarcacionAsistencia>>
+            ObtenerPorFechaAsync(
+                DateTime fecha);
+
+
         Task<bool> ExisteTipoEnFechaAsync(
             int empleadoId,
             string tipoMarcacion,
             DateTime fecha);
 
+
         Task AgregarAsync(
             MarcacionAsistencia marcacion);
+
+
+        Task AgregarRangoAsync(
+            IEnumerable<MarcacionAsistencia> marcaciones);
     }
 }
