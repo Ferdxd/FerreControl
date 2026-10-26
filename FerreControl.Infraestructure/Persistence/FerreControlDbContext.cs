@@ -1,4 +1,4 @@
-﻿using FerreControl.Domain.Entities;
+using FerreControl.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FerreControl.Infrastructure.Persistence;
@@ -11,46 +11,27 @@ public class FerreControlDbContext : DbContext
     {
     }
 
-
     // =========================================================
     // DBSETS
     // =========================================================
 
-    public DbSet<Negocio> Negocios =>
-        Set<Negocio>();
-
-    public DbSet<Empleado> Empleados =>
-        Set<Empleado>();
-
-    public DbSet<SalarioEmpleado> SalariosEmpleado =>
-        Set<SalarioEmpleado>();
-
-    public DbSet<Horario> Horarios =>
-        Set<Horario>();
-
-    public DbSet<HorarioDetalle> HorariosDetalle =>
-        Set<HorarioDetalle>();
-
-    public DbSet<EmpleadoHorario> EmpleadosHorarios =>
-        Set<EmpleadoHorario>();
-
-    public DbSet<EmpleadoCredencial> EmpleadosCredenciales =>
-        Set<EmpleadoCredencial>();
-
-    public DbSet<MarcacionAsistencia> MarcacionesAsistencia =>
-        Set<MarcacionAsistencia>();
+    public DbSet<Negocio> Negocios => Set<Negocio>();
+    public DbSet<Empleado> Empleados => Set<Empleado>();
+    public DbSet<SalarioEmpleado> SalariosEmpleado => Set<SalarioEmpleado>();
+    public DbSet<Horario> Horarios => Set<Horario>();
+    public DbSet<HorarioDetalle> HorariosDetalle => Set<HorarioDetalle>();
+    public DbSet<EmpleadoHorario> EmpleadosHorarios => Set<EmpleadoHorario>();
+    public DbSet<EmpleadoCredencial> EmpleadosCredenciales => Set<EmpleadoCredencial>();
+    public DbSet<MarcacionAsistencia> MarcacionesAsistencia => Set<MarcacionAsistencia>();
     public DbSet<Nomina> Nominas => Set<Nomina>();
-
     public DbSet<NominaDetalle> NominasDetalle => Set<NominaDetalle>();
-
     public DbSet<PagoNomina> PagosNomina => Set<PagoNomina>();
+    public DbSet<AdelantoEmpleado> AdelantosEmpleado => Set<AdelantoEmpleado>();
+    public DbSet<AdelantoAplicacion> AdelantosAplicaciones => Set<AdelantoAplicacion>();
 
-    public DbSet<AdelantoEmpleado> AdelantosEmpleado =>
-    Set<AdelantoEmpleado>();
-
-    public DbSet<AdelantoAplicacion> AdelantosAplicaciones =>
-        Set<AdelantoAplicacion>();
-
+    public DbSet<ReglaHoraExtra> ReglasHoraExtra => Set<ReglaHoraExtra>();
+    public DbSet<EmpleadoReglaHoraExtra> EmpleadosReglasHoraExtra => Set<EmpleadoReglaHoraExtra>();
+    public DbSet<RegistroHoraExtra> RegistrosHoraExtra => Set<RegistroHoraExtra>();
 
     // =========================================================
     // CONFIGURACION DEL MODELO
@@ -59,7 +40,6 @@ public class FerreControlDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
 
         // =====================================================
         // NEGOCIO
@@ -77,7 +57,6 @@ public class FerreControlDbContext : DbContext
                 .HasMaxLength(50)
                 .IsRequired();
         });
-
 
         // =====================================================
         // EMPLEADO
@@ -118,7 +97,6 @@ public class FerreControlDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-
         // =====================================================
         // SALARIO EMPLEADO
         // =====================================================
@@ -137,7 +115,6 @@ public class FerreControlDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-
         // =====================================================
         // HORARIO
         // =====================================================
@@ -155,7 +132,6 @@ public class FerreControlDbContext : DbContext
                 .HasForeignKey(x => x.NegocioID)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
 
         // =====================================================
         // HORARIO DETALLE
@@ -177,7 +153,6 @@ public class FerreControlDbContext : DbContext
                 .HasForeignKey(x => x.HorarioID)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-
 
         // =====================================================
         // EMPLEADO HORARIO
@@ -203,7 +178,6 @@ public class FerreControlDbContext : DbContext
                 .HasForeignKey(x => x.HorarioID)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
 
         // =====================================================
         // EMPLEADO CREDENCIAL
@@ -233,7 +207,6 @@ public class FerreControlDbContext : DbContext
                 .HasForeignKey(x => x.EmpleadoID)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
 
         // =====================================================
         // MARCACION ASISTENCIA
@@ -276,14 +249,17 @@ public class FerreControlDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<NominaDetalle>()
-    .HasIndex(x => new
-    {
-        x.NominaID,
-        x.EmpleadoID
-    })
-    .IsUnique();
+        // =====================================================
+        // NOMINA DETALLE
+        // =====================================================
 
+        modelBuilder.Entity<NominaDetalle>()
+            .HasIndex(x => new
+            {
+                x.NominaID,
+                x.EmpleadoID
+            })
+            .IsUnique();
 
         // =====================================================
         // ADELANTO EMPLEADO
@@ -322,7 +298,6 @@ public class FerreControlDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-
         // =====================================================
         // ADELANTO APLICACION
         // =====================================================
@@ -351,6 +326,93 @@ public class FerreControlDbContext : DbContext
             entity.HasOne(x => x.NominaDetalle)
                 .WithMany(x => x.AdelantosAplicados)
                 .HasForeignKey(x => x.NominaDetalleID)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // =====================================================
+        // REGLA HORA EXTRA
+        // =====================================================
+
+        modelBuilder.Entity<ReglaHoraExtra>(entity =>
+        {
+            entity.HasKey(x => x.ID);
+
+            entity.Property(x => x.Nombre)
+                .HasMaxLength(120)
+                .IsRequired();
+
+            entity.Property(x => x.TipoFraccion)
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.HasIndex(x => new
+            {
+                x.NegocioID,
+                x.Nombre
+            })
+            .IsUnique();
+
+            entity.HasOne(x => x.Negocio)
+                .WithMany(x => x.ReglasHoraExtra)
+                .HasForeignKey(x => x.NegocioID)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // =====================================================
+        // EMPLEADO - REGLA HORA EXTRA
+        // =====================================================
+
+        modelBuilder.Entity<EmpleadoReglaHoraExtra>(entity =>
+        {
+            entity.HasKey(x => x.ID);
+
+            entity.HasIndex(x => new
+            {
+                x.EmpleadoID,
+                x.FechaInicio
+            });
+
+            entity.HasOne(x => x.Empleado)
+                .WithMany(x => x.ConfiguracionesHoraExtra)
+                .HasForeignKey(x => x.EmpleadoID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.ReglaHoraExtra)
+                .WithMany(x => x.Asignaciones)
+                .HasForeignKey(x => x.ReglaHoraExtraID)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // =====================================================
+        // REGISTRO HORA EXTRA
+        // =====================================================
+
+        modelBuilder.Entity<RegistroHoraExtra>(entity =>
+        {
+            entity.HasKey(x => x.ID);
+
+            entity.Property(x => x.Estado)
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.Property(x => x.Observacion)
+                .HasMaxLength(500);
+
+            entity.HasIndex(x => new
+            {
+                x.EmpleadoID,
+                x.Fecha
+            })
+            .IsUnique();
+
+            entity.HasOne(x => x.Empleado)
+                .WithMany(x => x.RegistrosHoraExtra)
+                .HasForeignKey(x => x.EmpleadoID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.EmpleadoReglaHoraExtra)
+                .WithMany(x => x.Registros)
+                .HasForeignKey(x => x.EmpleadoReglaHoraExtraID)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

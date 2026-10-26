@@ -1,0 +1,510 @@
+<Window x:Class="FerreControl.Desktop.Views.Forms.HorasExtraWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Horas extra"
+        Width="1180"
+        Height="820"
+        MinWidth="1000"
+        MinHeight="700"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="24">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock
+                    Text="Horas extra"
+                    Foreground="White"
+                    FontSize="25"
+                    FontWeight="SemiBold"/>
+
+                <TextBlock
+                    Text="Configura tarifas reutilizables, asígnalas a empleados y aprueba el tiempo extraordinario detectado por Asistencia."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="12"
+                    Margin="0,6,0,0"/>
+            </StackPanel>
+
+            <Button
+                Grid.Column="1"
+                Content="Cerrar"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="BtnCerrar_Click"/>
+        </Grid>
+
+        <TabControl
+            Grid.Row="1"
+            Margin="0,20,0,0"
+            Background="Transparent"
+            BorderBrush="{StaticResource BorderBrush}"
+            Foreground="White">
+
+            <TabItem Header="Configuración">
+                <Grid Margin="18">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Grid.Column="0"
+                        Style="{StaticResource CardStyle}">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel>
+                                <TextBlock
+                                    Text="Reglas reutilizables"
+                                    Style="{StaticResource SectionTitleStyle}"/>
+
+                                <TextBlock
+                                    Text="La tarifa es el valor FINAL de una hora extra. Las fracciones se calculan por minuto exacto."
+                                    Foreground="{StaticResource TextSecondaryBrush}"
+                                    FontSize="11"
+                                    TextWrapping="Wrap"
+                                    Margin="0,5,0,0"/>
+                            </StackPanel>
+
+                            <Grid
+                                Grid.Row="1"
+                                Margin="0,18,0,18">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="160"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel>
+                                    <TextBlock
+                                        Text="NOMBRE"
+                                        Foreground="#64748B"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Margin="0,0,0,6"/>
+
+                                    <TextBox
+                                        x:Name="txtNombreRegla"
+                                        Style="{StaticResource ModernTextBoxStyle}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock
+                                        Text="TARIFA Q/HORA"
+                                        Foreground="#64748B"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Margin="0,0,0,6"/>
+
+                                    <TextBox
+                                        x:Name="txtTarifaRegla"
+                                        Style="{StaticResource ModernTextBoxStyle}"/>
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="3"
+                                    Orientation="Horizontal"
+                                    Margin="0,14,0,0">
+
+                                    <CheckBox
+                                        x:Name="chkRequiereAprobacion"
+                                        Content="Requiere aprobación"
+                                        IsChecked="True"
+                                        Foreground="White"
+                                        Margin="0,0,24,0"/>
+
+                                    <CheckBox
+                                        x:Name="chkEntradaAnticipada"
+                                        Content="Contar entrada anticipada"
+                                        IsChecked="False"
+                                        Foreground="White"/>
+                                </StackPanel>
+
+                                <Button
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3"
+                                    Content="+ Crear regla"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,14,0,0"
+                                    Click="BtnCrearRegla_Click"/>
+                            </Grid>
+
+                            <DataGrid
+                                x:Name="dgReglas"
+                                Grid.Row="2"
+                                Style="{StaticResource DarkDataGridStyle}"
+                                AutoGenerateColumns="False"
+                                IsReadOnly="True"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Header="Regla"
+                                        Binding="{Binding Nombre}"
+                                        Width="*"/>
+
+                                    <DataGridTextColumn
+                                        Header="Tarifa"
+                                        Binding="{Binding TarifaHora, StringFormat='Q {0:N2}/h'}"
+                                        Width="110"/>
+
+                                    <DataGridCheckBoxColumn
+                                        Header="Aprobación"
+                                        Binding="{Binding RequiereAprobacion}"
+                                        Width="85"/>
+
+                                    <DataGridCheckBoxColumn
+                                        Header="Entrada antes"
+                                        Binding="{Binding CuentaEntradaAnticipada}"
+                                        Width="90"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Grid.Column="2"
+                        Style="{StaticResource CardStyle}">
+
+                        <StackPanel>
+                            <TextBlock
+                                Text="Asignar regla al empleado"
+                                Style="{StaticResource SectionTitleStyle}"/>
+
+                            <TextBlock
+                                Text="La asignación conserva historial. Al cambiar de regla, la anterior finaliza el día previo."
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                FontSize="11"
+                                TextWrapping="Wrap"
+                                Margin="0,5,0,20"/>
+
+                            <TextBlock
+                                Text="EMPLEADO"
+                                Foreground="#64748B"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Margin="0,0,0,6"/>
+
+                            <ComboBox
+                                x:Name="cmbEmpleado"
+                                Style="{StaticResource ModernComboBoxStyle}"
+                                SelectionChanged="CmbEmpleado_SelectionChanged"
+                                Margin="0,0,0,18">
+
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Text="{Binding Codigo}"
+                                                Foreground="{StaticResource AccentLightBrush}"
+                                                Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding Nombres}" Foreground="White"/>
+                                            <TextBlock Text=" " Foreground="White"/>
+                                            <TextBlock Text="{Binding Apellidos}" Foreground="White"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <Border
+                                Background="#0D1626"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="14"
+                                Margin="0,0,0,18">
+
+                                <StackPanel>
+                                    <TextBlock
+                                        Text="REGLA ACTUAL"
+                                        Foreground="#64748B"
+                                        FontSize="10"
+                                        FontWeight="Bold"/>
+
+                                    <TextBlock
+                                        x:Name="txtReglaActual"
+                                        Text="Seleccione un empleado"
+                                        Foreground="White"
+                                        FontWeight="SemiBold"
+                                        Margin="0,5,0,0"/>
+
+                                    <TextBlock
+                                        x:Name="txtReglaActualDetalle"
+                                        Text=""
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        FontSize="11"
+                                        Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock
+                                Text="NUEVA REGLA"
+                                Foreground="#64748B"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Margin="0,0,0,6"/>
+
+                            <ComboBox
+                                x:Name="cmbRegla"
+                                Style="{StaticResource ModernComboBoxStyle}"
+                                DisplayMemberPath="Descripcion"
+                                Margin="0,0,0,18"/>
+
+                            <TextBlock
+                                Text="FECHA DE INICIO"
+                                Foreground="#64748B"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Margin="0,0,0,6"/>
+
+                            <DatePicker
+                                x:Name="dpFechaInicioRegla"
+                                Style="{StaticResource ModernDatePickerStyle}"
+                                SelectedDateFormat="Short"
+                                Margin="0,0,0,18"/>
+
+                            <Button
+                                Content="Asignar regla"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                HorizontalAlignment="Right"
+                                Click="BtnAsignarRegla_Click"/>
+
+                            <Border
+                                Background="#2A2111"
+                                BorderBrush="#634B18"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,22,0,0">
+
+                                <TextBlock
+                                    Text="La tarifa configurada es la tarifa FINAL por hora extra. Verifica que cumpla el mínimo legal aplicable al trabajador."
+                                    Foreground="#FBBF24"
+                                    FontSize="10"
+                                    TextWrapping="Wrap"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Cálculo y aprobación">
+                <Grid Margin="18">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <TextBlock
+                                    Text="DESDE"
+                                    Foreground="#64748B"
+                                    FontSize="10"
+                                    FontWeight="Bold"
+                                    Margin="0,0,0,5"/>
+
+                                <DatePicker
+                                    x:Name="dpDesde"
+                                    Style="{StaticResource ModernDatePickerStyle}"
+                                    SelectedDateFormat="Short"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock
+                                    Text="HASTA"
+                                    Foreground="#64748B"
+                                    FontSize="10"
+                                    FontWeight="Bold"
+                                    Margin="0,0,0,5"/>
+
+                                <DatePicker
+                                    x:Name="dpHasta"
+                                    Style="{StaticResource ModernDatePickerStyle}"
+                                    SelectedDateFormat="Short"/>
+                            </StackPanel>
+
+                            <Button
+                                Grid.Column="4"
+                                Content="Calcular desde Asistencia"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                VerticalAlignment="Bottom"
+                                Click="BtnCalcular_Click"/>
+
+                            <Button
+                                Grid.Column="6"
+                                Content="Actualizar"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                VerticalAlignment="Bottom"
+                                Click="BtnActualizar_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <DataGrid
+                        x:Name="dgRegistros"
+                        Grid.Row="1"
+                        Style="{StaticResource DarkDataGridStyle}"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        SelectionMode="Single"
+                        SelectionUnit="FullRow"
+                        Margin="0,18,0,18"
+                        SelectionChanged="DgRegistros_SelectionChanged">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="Fecha"
+                                Binding="{Binding Fecha, StringFormat=dd/MM/yyyy}"
+                                Width="95"/>
+
+                            <DataGridTextColumn
+                                Header="Empleado"
+                                Binding="{Binding NombreEmpleado}"
+                                Width="*"
+                                MinWidth="170"/>
+
+                            <DataGridTextColumn
+                                Header="Regla"
+                                Binding="{Binding ReglaNombre}"
+                                Width="150"/>
+
+                            <DataGridTextColumn
+                                Header="Detectado"
+                                Binding="{Binding ExtraCalculadoTexto}"
+                                Width="85"/>
+
+                            <DataGridTextColumn
+                                Header="Aprobado"
+                                Binding="{Binding ExtraAprobadoTexto}"
+                                Width="85"/>
+
+                            <DataGridTextColumn
+                                Header="Tarifa"
+                                Binding="{Binding TarifaHora, StringFormat='Q {0:N2}'}"
+                                Width="85"/>
+
+                            <DataGridTextColumn
+                                Header="Estimado"
+                                Binding="{Binding MontoEstimado, StringFormat='Q {0:N2}'}"
+                                Width="95"/>
+
+                            <DataGridTextColumn
+                                Header="A pagar"
+                                Binding="{Binding MontoAprobado, StringFormat='Q {0:N2}'}"
+                                Width="95"/>
+
+                            <DataGridTextColumn
+                                Header="Estado"
+                                Binding="{Binding Estado}"
+                                Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border
+                        Grid.Row="2"
+                        Style="{StaticResource CardStyle}">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <TextBlock
+                                    Text="MINUTOS APROBADOS"
+                                    Foreground="#64748B"
+                                    FontSize="10"
+                                    FontWeight="Bold"
+                                    Margin="0,0,0,5"/>
+
+                                <TextBox
+                                    x:Name="txtMinutosAprobados"
+                                    Style="{StaticResource ModernTextBoxStyle}"
+                                    IsEnabled="False"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock
+                                    Text="OBSERVACIÓN"
+                                    Foreground="#64748B"
+                                    FontSize="10"
+                                    FontWeight="Bold"
+                                    Margin="0,0,0,5"/>
+
+                                <TextBox
+                                    x:Name="txtObservacionDecision"
+                                    Style="{StaticResource ModernTextBoxStyle}"
+                                    IsEnabled="False"/>
+                            </StackPanel>
+
+                            <Button
+                                x:Name="btnAprobar"
+                                Grid.Column="4"
+                                Content="Aprobar"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                IsEnabled="False"
+                                VerticalAlignment="Bottom"
+                                Click="BtnAprobar_Click"/>
+
+                            <Button
+                                x:Name="btnRechazar"
+                                Grid.Column="6"
+                                Content="Rechazar"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                IsEnabled="False"
+                                VerticalAlignment="Bottom"
+                                Click="BtnRechazar_Click"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

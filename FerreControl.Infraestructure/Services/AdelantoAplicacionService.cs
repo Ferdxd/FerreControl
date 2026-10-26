@@ -81,10 +81,7 @@ public class AdelantoAplicacionService
     }
 
 
-    public async Task<AdelantoAplicacionDto>
-        AplicarAsync(
-            int adelantoId,
-            CrearAdelantoAplicacionDto dto)
+    public async Task<AdelantoAplicacionDto>AplicarAsync( int adelantoId, CrearAdelantoAplicacionDto dto)
     {
         var adelanto =
             await _adelantoRepository
@@ -143,12 +140,14 @@ public class AdelantoAplicacionService
                 "Nómina no encontrada.");
 
 
-        if (nomina.Estado == "CERRADA")
+        if (!string.Equals(
+     nomina.Estado,
+     "BORRADOR",
+     StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
-                "No se puede modificar una nómina cerrada.");
+                "Los adelantos solo pueden aplicarse a una nómina en BORRADOR.");
         }
-
 
         var totalPagado =
             await _pagoRepository
@@ -289,10 +288,7 @@ public class AdelantoAplicacionService
     }
 
 
-    public async Task<AdelantoAplicacionDto>
-        AnularAsync(
-            int id,
-            AnularAdelantoAplicacionDto dto)
+    public async Task<AdelantoAplicacionDto>AnularAsync(int id,AnularAdelantoAplicacionDto dto)
     {
         var aplicacion =
             await _aplicacionRepository
@@ -340,11 +336,14 @@ public class AdelantoAplicacionService
                 "Nómina no encontrada.");
 
 
-        if (nomina.Estado == "CERRADA")
-        {
-            throw new InvalidOperationException(
-                "No se puede modificar una nómina cerrada.");
-        }
+        if (!string.Equals(
+        nomina.Estado,
+        "BORRADOR",
+        StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "Los adelantos solo pueden aplicarse a una nómina en BORRADOR.");
+            }
 
 
         var totalPagado =

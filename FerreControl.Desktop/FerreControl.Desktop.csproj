@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FerreControl.Application\FerreControl.Application.csproj" />
   </ItemGroup>
 

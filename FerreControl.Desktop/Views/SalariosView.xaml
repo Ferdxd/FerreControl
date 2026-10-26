@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="FerreControl.Desktop.Views.SalariosView"
+<UserControl x:Class="FerreControl.Desktop.Views.SalariosView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -12,7 +12,9 @@
         </Grid.RowDefinitions>
 
 
-        <!-- CABECERA -->
+        <!-- =====================================================
+             CABECERA
+             ===================================================== -->
 
         <Grid>
 
@@ -29,7 +31,7 @@
                     Style="{StaticResource PageTitleStyle}"/>
 
                 <TextBlock
-                    Text="Administra el salario vigente y consulta su historial."
+                    Text="Administra salario, compensación de horas extra e historial del empleado."
                     Foreground="{StaticResource TextSecondaryBrush}"
                     FontSize="13"
                     Margin="0,6,0,0"/>
@@ -48,20 +50,28 @@
         </Grid>
 
 
-        <!-- RESUMEN -->
+        <!-- =====================================================
+             RESUMEN
+             ===================================================== -->
 
         <Grid
             Grid.Row="1"
             Margin="0,22,0,0">
 
             <Grid.ColumnDefinitions>
+
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="14"/>
+
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="14"/>
+
                 <ColumnDefinition Width="*"/>
+
             </Grid.ColumnDefinitions>
 
+
+            <!-- CON SALARIO -->
 
             <Border
                 Grid.Column="0"
@@ -88,6 +98,8 @@
             </Border>
 
 
+            <!-- SALARIO PROMEDIO -->
+
             <Border
                 Grid.Column="2"
                 Style="{StaticResource CardStyle}">
@@ -112,6 +124,8 @@
 
             </Border>
 
+
+            <!-- SIN SALARIO -->
 
             <Border
                 Grid.Column="4"
@@ -140,7 +154,9 @@
         </Grid>
 
 
-        <!-- FILTROS -->
+        <!-- =====================================================
+             FILTROS
+             ===================================================== -->
 
         <Border
             Grid.Row="2"
@@ -150,10 +166,15 @@
             <Grid>
 
                 <Grid.ColumnDefinitions>
+
                     <ColumnDefinition Width="*"/>
+
                     <ColumnDefinition Width="170"/>
+
                     <ColumnDefinition Width="15"/>
+
                     <ColumnDefinition Width="170"/>
+
                 </Grid.ColumnDefinitions>
 
 
@@ -171,8 +192,11 @@
                     SelectionChanged="CmbFiltros_SelectionChanged">
 
                     <ComboBoxItem Content="Todas"/>
+
                     <ComboBoxItem Content="Semanal"/>
+
                     <ComboBoxItem Content="Quincenal"/>
+
                     <ComboBoxItem Content="Mensual"/>
 
                 </ComboBox>
@@ -185,7 +209,9 @@
                     SelectionChanged="CmbFiltros_SelectionChanged">
 
                     <ComboBoxItem Content="Todos"/>
+
                     <ComboBoxItem Content="Con salario"/>
+
                     <ComboBoxItem Content="Sin salario"/>
 
                 </ComboBox>
@@ -195,20 +221,28 @@
         </Border>
 
 
-        <!-- CONTENIDO -->
+        <!-- =====================================================
+             CONTENIDO
+             ===================================================== -->
 
         <Grid
             Grid.Row="3"
             Margin="0,18,0,0">
 
             <Grid.ColumnDefinitions>
+
                 <ColumnDefinition Width="2*"/>
+
                 <ColumnDefinition Width="18"/>
-                <ColumnDefinition Width="360"/>
+
+                <ColumnDefinition Width="400"/>
+
             </Grid.ColumnDefinitions>
 
 
-            <!-- TABLA -->
+            <!-- =================================================
+                 TABLA DE SALARIOS
+                 ================================================= -->
 
             <Border
                 Grid.Column="0"
@@ -217,8 +251,11 @@
                 <Grid>
 
                     <Grid.RowDefinitions>
+
                         <RowDefinition Height="Auto"/>
+
                         <RowDefinition Height="*"/>
+
                     </Grid.RowDefinitions>
 
 
@@ -233,6 +270,9 @@
                         Grid.Row="1"
                         Style="{StaticResource DarkDataGridStyle}"
                         IsReadOnly="True"
+                        AutoGenerateColumns="False"
+                        SelectionMode="Single"
+                        SelectionUnit="FullRow"
                         SelectionChanged="DgSalarios_SelectionChanged">
 
                         <DataGrid.Columns>
@@ -254,8 +294,7 @@
 
                             <DataGridTextColumn
                                 Header="Salario"
-                                Binding="{Binding Monto,
-                                    StringFormat='Q {0:N2}'}"
+                                Binding="{Binding Monto, StringFormat='Q {0:N2}'}"
                                 Width="120"/>
 
                             <DataGridTextColumn
@@ -265,8 +304,7 @@
 
                             <DataGridTextColumn
                                 Header="Desde"
-                                Binding="{Binding FechaInicio,
-                                    StringFormat=dd/MM/yyyy}"
+                                Binding="{Binding FechaInicio, StringFormat=dd/MM/yyyy}"
                                 Width="110"/>
 
                         </DataGrid.Columns>
@@ -278,152 +316,298 @@
             </Border>
 
 
-            <!-- DETALLE -->
+            <!-- =================================================
+                 PANEL DERECHO / DETALLE
+                 ================================================= -->
 
             <Border
                 Grid.Column="2"
                 Style="{StaticResource CardStyle}">
 
-                <Grid>
+                <!--
+                    IMPORTANTE:
+                    El ScrollViewer evita que los controles inferiores
+                    queden recortados cuando la ventana no tiene altura.
+                -->
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
 
                     <StackPanel>
 
-                        <TextBlock
-                            Text="Detalle del empleado"
-                            Style="{StaticResource SectionTitleStyle}"/>
 
-                        <TextBlock
-                            x:Name="txtEmpleadoSalario"
-                            Text="Selecciona un empleado"
-                            Foreground="{StaticResource TextSecondaryBrush}"
-                            Margin="0,5,0,0"/>
-
-                    </StackPanel>
-
-
-                    <!-- SALARIO ACTUAL -->
-
-                    <Border
-                        Grid.Row="1"
-                        Background="#0D1626"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="15"
-                        Margin="0,18,0,15">
+                        <!-- =====================================
+                             EMPLEADO
+                             ===================================== -->
 
                         <StackPanel>
 
                             <TextBlock
-                                Text="SALARIO ACTUAL"
-                                Foreground="#64748B"
-                                FontSize="10"
-                                FontWeight="Bold"/>
+                                Text="Detalle del empleado"
+                                Style="{StaticResource SectionTitleStyle}"/>
 
                             <TextBlock
-                                x:Name="txtSalarioActual"
-                                Text="--"
-                                Foreground="White"
-                                FontSize="26"
-                                FontWeight="SemiBold"
-                                Margin="0,6,0,12"/>
-
-
-                            <TextBlock
-                                Text="Periodicidad"
-                                Foreground="#64748B"
-                                FontSize="10"/>
-
-                            <TextBlock
-                                x:Name="txtPeriodicidadActual"
-                                Text="--"
-                                Foreground="White"
-                                Margin="0,3,0,10"/>
-
-
-                            <TextBlock
-                                Text="Vigente desde"
-                                Foreground="#64748B"
-                                FontSize="10"/>
-
-                            <TextBlock
-                                x:Name="txtFechaInicioSalario"
-                                Text="--"
-                                Foreground="White"
-                                Margin="0,3,0,0"/>
+                                x:Name="txtEmpleadoSalario"
+                                Text="Selecciona un empleado"
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                TextWrapping="Wrap"
+                                Margin="0,5,0,0"/>
 
                         </StackPanel>
 
-                    </Border>
+
+                        <!-- =====================================
+                             SALARIO ACTUAL
+                             ===================================== -->
+
+                        <Border
+                            Background="#0D1626"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="15"
+                            Margin="0,18,0,12">
+
+                            <StackPanel>
+
+                                <TextBlock
+                                    Text="SALARIO ACTUAL"
+                                    Foreground="#64748B"
+                                    FontSize="10"
+                                    FontWeight="Bold"/>
 
 
-                    <Button
-                        x:Name="btnCambiarSalario"
-                        Grid.Row="2"
-                        Content="Registrar salario"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        IsEnabled="False"
-                        Margin="0,0,0,18"
-                        Click="BtnCambiarSalario_Click"/>
+                                <TextBlock
+                                    x:Name="txtSalarioActual"
+                                    Text="--"
+                                    Foreground="White"
+                                    FontSize="26"
+                                    FontWeight="SemiBold"
+                                    Margin="0,6,0,12"/>
 
 
-                    <!-- HISTORIAL -->
+                                <TextBlock
+                                    Text="Periodicidad"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
 
-                    <Grid Grid.Row="3">
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                                <TextBlock
+                                    x:Name="txtPeriodicidadActual"
+                                    Text="--"
+                                    Foreground="White"
+                                    Margin="0,3,0,10"/>
 
+
+                                <TextBlock
+                                    Text="Vigente desde"
+                                    Foreground="#64748B"
+                                    FontSize="10"/>
+
+
+                                <TextBlock
+                                    x:Name="txtFechaInicioSalario"
+                                    Text="--"
+                                    Foreground="White"
+                                    Margin="0,3,0,0"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+
+                        <!-- =====================================
+                             CAMBIAR SALARIO
+                             ===================================== -->
+
+                        <Button
+                            x:Name="btnCambiarSalario"
+                            Content="Registrar salario"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            IsEnabled="False"
+                            Height="40"
+                            Margin="0,0,0,18"
+                            Click="BtnCambiarSalario_Click"/>
+
+
+                        <!-- =====================================
+                             HORAS EXTRA
+                             ===================================== -->
+
+                        <Border
+                            Background="#0D1626"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="15"
+                            Margin="0,0,0,12">
+
+                            <StackPanel>
+
+
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+
+                                        <ColumnDefinition Width="*"/>
+
+                                        <ColumnDefinition Width="Auto"/>
+
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <TextBlock
+                                        Text="HORAS EXTRA"
+                                        Foreground="#64748B"
+                                        FontSize="10"
+                                        FontWeight="Bold"/>
+
+
+                                    <Border
+                                        Grid.Column="1"
+                                        Background="#111827"
+                                        CornerRadius="5"
+                                        Padding="8,3">
+
+                                        <TextBlock
+                                            x:Name="txtEstadoHoraExtra"
+                                            Text="--"
+                                            Foreground="{StaticResource TextSecondaryBrush}"
+                                            FontSize="11"
+                                            FontWeight="SemiBold"/>
+
+                                    </Border>
+
+                                </Grid>
+
+
+                                <TextBlock
+                                    x:Name="txtReglaHoraExtra"
+                                    Text="Sin configuración"
+                                    Foreground="White"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    TextWrapping="Wrap"
+                                    Margin="0,12,0,14"/>
+
+
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+
+                                        <ColumnDefinition Width="*"/>
+
+                                        <ColumnDefinition Width="*"/>
+
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <!-- TARIFA -->
+
+                                    <StackPanel>
+
+                                        <TextBlock
+                                            Text="TARIFA"
+                                            Foreground="#64748B"
+                                            FontSize="10"/>
+
+                                        <TextBlock
+                                            x:Name="txtTarifaHoraExtra"
+                                            Text="--"
+                                            Foreground="{StaticResource SuccessBrush}"
+                                            FontWeight="SemiBold"
+                                            FontSize="14"
+                                            Margin="0,4,0,0"/>
+
+                                    </StackPanel>
+
+
+                                    <!-- VIGENCIA -->
+
+                                    <StackPanel
+                                        Grid.Column="1">
+
+                                        <TextBlock
+                                            Text="VIGENTE DESDE"
+                                            Foreground="#64748B"
+                                            FontSize="10"/>
+
+                                        <TextBlock
+                                            x:Name="txtFechaHoraExtra"
+                                            Text="--"
+                                            Foreground="White"
+                                            FontWeight="SemiBold"
+                                            FontSize="14"
+                                            Margin="0,4,0,0"/>
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                            </StackPanel>
+
+                        </Border>
+
+
+                        <!-- =====================================
+                             BOTÓN CONFIGURAR HORAS EXTRA
+                             ===================================== -->
+
+                        <Button
+                            x:Name="btnConfigurarHoraExtra"
+                            Content="⚙  Configurar horas extra"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsEnabled="False"
+                            Visibility="Visible"
+                            Height="42"
+                            Margin="0,0,0,22"
+                            Click="BtnConfigurarHoraExtra_Click"/>
+
+
+                        <!-- =====================================
+                             HISTORIAL
+                             ===================================== -->
 
                         <TextBlock
-                            Text="Historial"
+                            Text="Historial de salarios"
                             Style="{StaticResource SectionTitleStyle}"
                             Margin="0,0,0,10"/>
 
 
                         <DataGrid
                             x:Name="dgHistorialSalarios"
-                            Grid.Row="1"
                             Style="{StaticResource DarkDataGridStyle}"
-                            IsReadOnly="True">
+                            IsReadOnly="True"
+                            AutoGenerateColumns="False"
+                            Height="220"
+                            Margin="0,0,0,8">
 
                             <DataGrid.Columns>
 
                                 <DataGridTextColumn
                                     Header="Desde"
-                                    Binding="{Binding FechaInicio,
-                                        StringFormat=dd/MM/yyyy}"
+                                    Binding="{Binding FechaInicio, StringFormat=dd/MM/yyyy}"
                                     Width="95"/>
 
                                 <DataGridTextColumn
                                     Header="Hasta"
-                                    Binding="{Binding FechaFin,
-                                        StringFormat=dd/MM/yyyy}"
+                                    Binding="{Binding FechaFin, StringFormat=dd/MM/yyyy}"
                                     Width="95"/>
 
                                 <DataGridTextColumn
                                     Header="Monto"
-                                    Binding="{Binding Monto,
-                                        StringFormat='Q {0:N2}'}"
+                                    Binding="{Binding Monto, StringFormat='Q {0:N2}'}"
                                     Width="*"/>
 
                             </DataGrid.Columns>
 
                         </DataGrid>
 
-                    </Grid>
 
-                </Grid>
+                    </StackPanel>
+
+                </ScrollViewer>
 
             </Border>
 

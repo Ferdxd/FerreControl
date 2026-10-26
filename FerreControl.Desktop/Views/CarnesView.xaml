@@ -1,0 +1,514 @@
+﻿<UserControl x:Class="FerreControl.Desktop.Views.CarnesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{StaticResource BackgroundBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- CABECERA -->
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel>
+
+                <TextBlock
+                    Text="Carnés de empleados"
+                    Style="{StaticResource PageTitleStyle}"/>
+
+                <TextBlock
+                    Text="Genera, administra e imprime las credenciales utilizadas para el control de asistencia."
+                    Foreground="{StaticResource TextSecondaryBrush}"
+                    FontSize="13"
+                    Margin="0,6,0,0"/>
+
+            </StackPanel>
+
+
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Horizontal">
+
+                <Button
+                    Content="Generar faltantes"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Height="42"
+                    Margin="0,0,10,0"
+                    Click="BtnGenerarFaltantes_Click"/>
+
+                <Button
+                    Content="Imprimir todos"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Height="42"
+                    Click="BtnImprimirTodos_Click"/>
+
+            </StackPanel>
+
+        </Grid>
+
+
+        <!-- INDICADORES + FILTROS -->
+
+        <Grid
+            Grid.Row="1"
+            Margin="0,20,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="180"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="ACTIVOS"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtTotalActivos"
+                        Text="0"
+                        Foreground="White"
+                        FontSize="25"
+                        FontWeight="SemiBold"
+                        Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="CON CARNÉ"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtConCarnet"
+                        Text="0"
+                        Foreground="{StaticResource SuccessBrush}"
+                        FontSize="25"
+                        FontWeight="SemiBold"
+                        Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <Border
+                Grid.Column="4"
+                Style="{StaticResource CardStyle}">
+
+                <StackPanel>
+
+                    <TextBlock
+                        Text="SIN CARNÉ"
+                        Foreground="#64748B"
+                        FontSize="10"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="txtSinCarnet"
+                        Text="0"
+                        Foreground="{StaticResource WarningBrush}"
+                        FontSize="25"
+                        FontWeight="SemiBold"
+                        Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+            </Border>
+
+
+            <TextBox
+                x:Name="txtBuscar"
+                Grid.Column="6"
+                Style="{StaticResource ModernTextBoxStyle}"
+                Margin="0,0,12,0"
+                TextChanged="TxtBuscar_TextChanged"/>
+
+
+            <ComboBox
+                x:Name="cmbEstado"
+                Grid.Column="7"
+                Style="{StaticResource ModernComboBoxStyle}"
+                SelectionChanged="CmbEstado_SelectionChanged">
+
+                <ComboBoxItem Content="Todos"/>
+                <ComboBoxItem Content="Con credencial"/>
+                <ComboBoxItem Content="Sin credencial"/>
+
+            </ComboBox>
+
+        </Grid>
+
+
+        <!-- CONTENIDO -->
+
+        <Grid
+            Grid.Row="2"
+            Margin="0,18,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="430"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- TABLA -->
+
+            <Border
+                Grid.Column="0"
+                Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock
+                        Text="Empleados activos"
+                        Style="{StaticResource SectionTitleStyle}"
+                        Margin="0,0,0,14"/>
+
+
+                    <DataGrid
+                        x:Name="dgCarnes"
+                        Grid.Row="1"
+                        Style="{StaticResource DarkDataGridStyle}"
+                        IsReadOnly="True"
+                        AutoGenerateColumns="False"
+                        SelectionMode="Extended"
+                        SelectionUnit="FullRow"
+                        SelectionChanged="DgCarnes_SelectionChanged">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn
+                                Header="Código"
+                                Binding="{Binding CodigoEmpleado}"
+                                Width="90"/>
+
+                            <DataGridTextColumn
+                                Header="Empleado"
+                                Binding="{Binding NombreCompleto}"
+                                Width="*"/>
+
+                            <DataGridTextColumn
+                                Header="Puesto"
+                                Binding="{Binding Puesto}"
+                                Width="140"/>
+
+                            <DataGridTextColumn
+                                Header="Estado"
+                                Binding="{Binding EstadoCredencial}"
+                                Width="120"/>
+
+                            <DataGridTextColumn
+                                Header="Credencial"
+                                Binding="{Binding CodigoCredencial}"
+                                Width="190"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+
+                    <StackPanel
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,15,0,0">
+
+                        <Button
+                            x:Name="btnImprimirSeleccionados"
+                            Content="Imprimir seleccionados"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsEnabled="False"
+                            Click="BtnImprimirSeleccionados_Click"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- PANEL DERECHO -->
+
+            <Border
+                Grid.Column="2"
+                Style="{StaticResource CardStyle}">
+
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Auto">
+
+                    <StackPanel>
+
+                        <TextBlock
+                            Text="Vista previa"
+                            Style="{StaticResource SectionTitleStyle}"/>
+
+                        <TextBlock
+                            x:Name="txtEmpleadoSeleccionado"
+                            Text="Selecciona un empleado"
+                            Foreground="{StaticResource TextSecondaryBrush}"
+                            Margin="0,5,0,18"/>
+
+
+                        <!-- CARNÉ -->
+
+                        <Viewbox
+                            Stretch="Uniform"
+                            Margin="0,0,0,20">
+
+                            <Border
+                                Width="323"
+                                Height="204"
+                                Background="White"
+                                BorderBrush="#94A3B8"
+                                BorderThickness="1"
+                                CornerRadius="7"
+                                ClipToBounds="True">
+
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="38"/>
+                                        <RowDefinition Height="70"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+
+                                    <Border
+                                        Background="#0F172A">
+
+                                        <Grid Margin="14,0">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Text="FERRECONTROL"
+                                                Foreground="White"
+                                                FontSize="14"
+                                                FontWeight="Bold"
+                                                VerticalAlignment="Center"/>
+
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Text="EMPLEADO"
+                                                Foreground="#94A3B8"
+                                                FontSize="9"
+                                                FontWeight="SemiBold"
+                                                VerticalAlignment="Center"/>
+
+                                        </Grid>
+
+                                    </Border>
+
+
+                                    <StackPanel
+                                        Grid.Row="1"
+                                        Margin="14,10,14,0">
+
+                                        <TextBlock
+                                            x:Name="txtPreviewNombre"
+                                            Text="NOMBRE DEL EMPLEADO"
+                                            Foreground="#0F172A"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            TextTrimming="CharacterEllipsis"/>
+
+                                        <TextBlock
+                                            x:Name="txtPreviewPuesto"
+                                            Text="Puesto"
+                                            Foreground="#475569"
+                                            FontSize="10"
+                                            Margin="0,4,0,0"/>
+
+                                        <TextBlock
+                                            x:Name="txtPreviewCodigoEmpleado"
+                                            Text="Código: --"
+                                            Foreground="#64748B"
+                                            FontSize="9"
+                                            Margin="0,5,0,0"/>
+
+                                    </StackPanel>
+
+
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Margin="14,2,14,10">
+
+                                        <Image
+                                            x:Name="imgCodigoBarras"
+                                            Height="61"
+                                            Stretch="Fill"/>
+
+                                        <TextBlock
+                                            x:Name="txtPreviewCodigoCredencial"
+                                            Text="SIN CREDENCIAL"
+                                            Foreground="Black"
+                                            FontFamily="Consolas"
+                                            FontSize="8"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,3,0,0"/>
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                            </Border>
+
+                        </Viewbox>
+
+
+                        <Border
+                            Background="#0D1626"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="14"
+                            Margin="0,0,0,16">
+
+                            <Grid>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel>
+
+                                    <TextBlock
+                                        Text="ESTADO"
+                                        Foreground="#64748B"
+                                        FontSize="10"
+                                        FontWeight="Bold"/>
+
+                                    <TextBlock
+                                        x:Name="txtEstadoCredencial"
+                                        Text="--"
+                                        Foreground="White"
+                                        FontSize="15"
+                                        FontWeight="SemiBold"
+                                        Margin="0,5,0,0"/>
+
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Column="1">
+
+                                    <TextBlock
+                                        Text="GENERADA"
+                                        Foreground="#64748B"
+                                        FontSize="10"
+                                        FontWeight="Bold"/>
+
+                                    <TextBlock
+                                        x:Name="txtFechaCredencial"
+                                        Text="--"
+                                        Foreground="White"
+                                        Margin="0,5,0,0"/>
+
+                                </StackPanel>
+
+                            </Grid>
+
+                        </Border>
+
+
+                        <Button
+                            x:Name="btnGenerar"
+                            Content="Generar código de barras"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            IsEnabled="False"
+                            Height="42"
+                            Margin="0,0,0,10"
+                            Click="BtnGenerar_Click"/>
+
+                        <Button
+                            x:Name="btnReimprimir"
+                            Content="Reimprimir carné"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsEnabled="False"
+                            Height="40"
+                            Margin="0,0,0,10"
+                            Click="BtnReimprimir_Click"/>
+
+                        <Button
+                            x:Name="btnReemplazar"
+                            Content="Reemplazar credencial"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsEnabled="False"
+                            Height="40"
+                            Margin="0,0,0,10"
+                            Click="BtnReemplazar_Click"/>
+
+                        <Button
+                            x:Name="btnDesactivar"
+                            Content="Desactivar credencial"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsEnabled="False"
+                            Height="40"
+                            Margin="0,0,0,10"
+                            Click="BtnDesactivar_Click"/>
+
+                        <Button
+                            x:Name="btnOtrasCredenciales"
+                            Content="Administrar otras credenciales"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsEnabled="False"
+                            Height="40"
+                            Click="BtnOtrasCredenciales_Click"/>
+
+                    </StackPanel>
+
+                </ScrollViewer>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

@@ -8,12 +8,15 @@ namespace FerreControl.Infraestructure.Repositories
     public class MarcacionAsistenciaRepository
         : IMarcacionAsistenciaRepository
     {
-        private readonly FerreControlDbContext _db;
+        private readonly FerreControlDbContext
+            _db;
+
 
         public MarcacionAsistenciaRepository(
             FerreControlDbContext db)
         {
-            _db = db;
+            _db =
+                db;
         }
 
 
@@ -22,7 +25,8 @@ namespace FerreControl.Infraestructure.Repositories
                 int empleadoId,
                 DateTime fecha)
         {
-            var inicio = fecha.Date;
+            var inicio =
+                fecha.Date;
 
             var fin =
                 inicio.AddDays(1);
@@ -31,10 +35,36 @@ namespace FerreControl.Infraestructure.Repositories
             return await _db.MarcacionesAsistencia
                 .AsNoTracking()
                 .Where(x =>
-                    x.EmpleadoID == empleadoId &&
-                    x.FechaHora >= inicio &&
+                    x.EmpleadoID == empleadoId
+                    &&
+                    x.FechaHora >= inicio
+                    &&
                     x.FechaHora < fin)
-                .OrderBy(x => x.FechaHora)
+                .OrderBy(x =>
+                    x.FechaHora)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<MarcacionAsistencia>>
+            ObtenerPorFechaAsync(
+                DateTime fecha)
+        {
+            var inicio =
+                fecha.Date;
+
+            var fin =
+                inicio.AddDays(1);
+
+
+            return await _db.MarcacionesAsistencia
+                .AsNoTracking()
+                .Where(x =>
+                    x.FechaHora >= inicio
+                    &&
+                    x.FechaHora < fin)
+                .OrderBy(x =>
+                    x.FechaHora)
                 .ToListAsync();
         }
 
@@ -45,7 +75,8 @@ namespace FerreControl.Infraestructure.Repositories
                 string tipoMarcacion,
                 DateTime fecha)
         {
-            var inicio = fecha.Date;
+            var inicio =
+                fecha.Date;
 
             var fin =
                 inicio.AddDays(1);
@@ -53,10 +84,14 @@ namespace FerreControl.Infraestructure.Repositories
 
             return await _db.MarcacionesAsistencia
                 .AnyAsync(x =>
-                    x.EmpleadoID == empleadoId &&
+                    x.EmpleadoID ==
+                        empleadoId
+                    &&
                     x.TipoMarcacion ==
-                        tipoMarcacion &&
-                    x.FechaHora >= inicio &&
+                        tipoMarcacion
+                    &&
+                    x.FechaHora >= inicio
+                    &&
                     x.FechaHora < fin);
         }
 
@@ -65,7 +100,21 @@ namespace FerreControl.Infraestructure.Repositories
             MarcacionAsistencia marcacion)
         {
             await _db.MarcacionesAsistencia
-                .AddAsync(marcacion);
+                .AddAsync(
+                    marcacion);
+
+
+            await _db.SaveChangesAsync();
+        }
+
+
+        public async Task AgregarRangoAsync(
+            IEnumerable<MarcacionAsistencia> marcaciones)
+        {
+            await _db.MarcacionesAsistencia
+                .AddRangeAsync(
+                    marcaciones);
+
 
             await _db.SaveChangesAsync();
         }

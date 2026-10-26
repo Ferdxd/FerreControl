@@ -44,7 +44,7 @@ namespace FerreControl.Infraestructure.Services
 
         public async Task<List<SalarioEmpleadoDto>> ObtenerHistorialAsync(int idEmpleado)
         {
-            var empleado = _empleadoRepository.ObtenerPorIdAsync(idEmpleado);
+            var empleado = await _empleadoRepository.ObtenerPorIdAsync(idEmpleado);
             if (empleado == null)
             {
                 throw new InvalidOperationException("El empleado no existe");

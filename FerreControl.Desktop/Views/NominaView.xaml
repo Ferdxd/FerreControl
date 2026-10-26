@@ -372,107 +372,116 @@
                     <!-- CABECERA DEL DETALLE                      -->
                     <!-- ========================================= -->
 
+
+
+
+                    <!-- ========================================= -->
+                    <!-- CABECERA DEL DETALLE                      -->
+                    <!-- ========================================= -->
+
                     <Grid>
 
                         <Grid.ColumnDefinitions>
 
+                            <ColumnDefinition Width="Auto"/>
+
+                            <ColumnDefinition Width="20"/>
+
                             <ColumnDefinition Width="*"/>
-
-                            <ColumnDefinition Width="Auto"/>
-
-                            <ColumnDefinition Width="8"/>
-
-                            <ColumnDefinition Width="Auto"/>
-
-                            <ColumnDefinition Width="8"/>
-
-                            <ColumnDefinition Width="Auto"/>
-
-                            <ColumnDefinition Width="8"/>
-
-                            <ColumnDefinition Width="Auto"/>
-
-                            <ColumnDefinition Width="8"/>
-
-                            <ColumnDefinition Width="Auto"/>
-
-                            <ColumnDefinition Width="8"/>
-
-                            <ColumnDefinition Width="Auto"/>
 
                         </Grid.ColumnDefinitions>
 
 
-                        <StackPanel>
+                        <!-- TÍTULO -->
+
+                        <StackPanel Grid.Column="0">
 
                             <TextBlock
-                                x:Name="txtPeriodoSeleccionado"
-                                Text="Selecciona una nómina"
-                                Style="{StaticResource SectionTitleStyle}"/>
+            x:Name="txtPeriodoSeleccionado"
+            Text="Selecciona una nómina"
+            Style="{StaticResource SectionTitleStyle}"/>
 
 
                             <TextBlock
-                                x:Name="txtEstadoSeleccionado"
-                                Text="--"
-                                Foreground="{StaticResource TextSecondaryBrush}"
-                                FontSize="12"
-                                Margin="0,4,0,0"/>
+            x:Name="txtEstadoSeleccionado"
+            Text="--"
+            Foreground="{StaticResource TextSecondaryBrush}"
+            FontSize="12"
+            Margin="0,4,0,0"/>
 
                         </StackPanel>
 
 
-                        <Button
-                            x:Name="btnAgregarEmpleado"
-                            Grid.Column="1"
-                            Content="+ Empleado"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnAgregarEmpleado_Click"/>
+                        <!-- ACCIONES -->
+
+                        <WrapPanel
+        Grid.Column="2"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Center">
 
 
-                        <Button
-                            x:Name="btnAplicarAdelanto"
-                            Grid.Column="3"
-                            Content="Adelanto"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnAplicarAdelanto_Click"/>
+                            <Button
+            x:Name="btnAgregarEmpleado"
+            Content="+ Empleado"
+            Style="{StaticResource SecondaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,8,8"
+            Click="BtnAgregarEmpleado_Click"/>
 
 
-                        <Button
-                            x:Name="btnGenerarNomina"
-                            Grid.Column="5"
-                            Content="Generar"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnGenerarNomina_Click"/>
+                            <Button
+            x:Name="btnDarAdelanto"
+            Content="Adelantos"
+            Style="{StaticResource PrimaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,8,8"
+            Click="BtnDarAdelanto_Click"/>
+
+            <Button
+            x:Name="btnHistorialAdelantos"
+            Content="Historial adelantos"
+            Style="{StaticResource SecondaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,8,8"
+            Click="BtnHistorialAdelantos_Click"/>
 
 
-                        <Button
-                            x:Name="btnRegistrarPago"
-                            Grid.Column="7"
-                            Content="Registrar pago"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnRegistrarPago_Click"/>
+                            <Button
+            x:Name="btnGenerarNomina"
+            Content="Generar"
+            Style="{StaticResource SecondaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,8,8"
+            Click="BtnGenerarNomina_Click"/>
 
 
-                        <Button
-                            x:Name="btnVerPagos"
-                            Grid.Column="9"
-                            Content="Ver pagos"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnVerPagos_Click"/>
+                            <Button
+            x:Name="btnRegistrarPago"
+            Content="Registrar pago"
+            Style="{StaticResource PrimaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,8,8"
+            Click="BtnRegistrarPago_Click"/>
 
 
-                        <Button
-                            x:Name="btnCerrarNomina"
-                            Grid.Column="11"
-                            Content="Cerrar"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            IsEnabled="False"
-                            Click="BtnCerrarNomina_Click"/>
+                            <Button
+            x:Name="btnVerPagos"
+            Content="Ver pagos"
+            Style="{StaticResource SecondaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,8,8"
+            Click="BtnVerPagos_Click"/>
+
+
+                            <Button
+            x:Name="btnCerrarNomina"
+            Content="Cerrar"
+            Style="{StaticResource SecondaryButtonStyle}"
+            IsEnabled="False"
+            Margin="0,0,0,8"
+            Click="BtnCerrarNomina_Click"/>
+
+                        </WrapPanel>
 
                     </Grid>
 

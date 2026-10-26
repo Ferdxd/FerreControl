@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using FerreControl.Application.DTOs.EmpleadoCredencial;
+﻿using FerreControl.Application.DTOs.EmpleadoCredencial;
 using FerreControl.Application.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,14 +17,20 @@ namespace FerreControl.Api.Controllers
         public EmpleadoCredencialController(
             IEmpleadoCredencialService service)
         {
-            _service = service;
+            _service =
+                service;
         }
 
+
+        // =====================================================
+        // LISTAR
+        // =====================================================
 
         [HttpGet]
         public async Task<ActionResult<
             List<EmpleadoCredencialDto>>>
-            Obtener(int empleadoId)
+            Obtener(
+                int empleadoId)
         {
             try
             {
@@ -37,10 +41,15 @@ namespace FerreControl.Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(
+                    ex.Message);
             }
         }
 
+
+        // =====================================================
+        // CREAR MANUAL
+        // =====================================================
 
         [HttpPost]
         public async Task<ActionResult<
@@ -52,20 +61,28 @@ namespace FerreControl.Api.Controllers
             try
             {
                 var resultado =
-                    await _service.CrearAsync(
-                        empleadoId,
-                        dto);
+                    await _service
+                        .CrearAsync(
+                            empleadoId,
+                            dto);
+
 
                 return StatusCode(
-                    StatusCodes.Status201Created,
+                    StatusCodes
+                        .Status201Created,
                     resultado);
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(
+                    ex.Message);
             }
         }
 
+
+        // =====================================================
+        // ESTADO
+        // =====================================================
 
         [HttpPut("{credencialId:int}/estado")]
         public async Task<ActionResult<
@@ -75,16 +92,35 @@ namespace FerreControl.Api.Controllers
                 int credencialId,
                 ActualizarEstadoCredencialDto dto)
         {
-            var resultado =
-                await _service
-                    .ActualizarEstadoAsync(
-                        credencialId,
-                        dto.Estado);
+            try
+            {
+                var resultado =
+                    await _service
+                        .ActualizarEstadoAsync(
+                            credencialId,
+                            dto.Estado);
 
-            if (resultado == null)
-                return NotFound();
 
-            return Ok(resultado);
+                if (resultado == null)
+                    return NotFound();
+
+
+                if (resultado.EmpleadoID !=
+                    empleadoId)
+                {
+                    return BadRequest(
+                        "La credencial no pertenece al empleado indicado.");
+                }
+
+
+                return Ok(
+                    resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
         }
     }
 }
