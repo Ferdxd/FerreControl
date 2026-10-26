@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace FerreControl.Desktop.Views
@@ -11,17 +12,55 @@ namespace FerreControl.Desktop.Views
     public partial class MarcajeView
         : UserControl
     {
+        // =====================================================
+        // CONFIGURACIÓN
+        // =====================================================
+
+        private const string TipoCredencialMarcaje =
+            "CODIGO_BARRAS";
+
+
+        /*
+         * Evita que el lector registre dos marcaciones
+         * distintas cuando envía el mismo código dos veces
+         * accidentalmente.
+         */
+        private static readonly TimeSpan
+            TiempoProteccionDobleLectura =
+                TimeSpan.FromSeconds(10);
+
+
+        // =====================================================
+        // SERVICIOS
+        // =====================================================
+
         private readonly MarcacionAsistenciaApiService
             _marcacionApi;
 
+
+        // =====================================================
+        // RELOJ
+        // =====================================================
 
         private readonly DispatcherTimer
             _reloj;
 
 
+        // =====================================================
+        // ESTADO
+        // =====================================================
+
         private bool
             _procesando;
 
+
+        private readonly Dictionary<string, DateTime>
+            _ultimasLecturasExitosas;
+
+
+        // =====================================================
+        // CONSTRUCTOR
+        // =====================================================
 
         public MarcajeView()
         {
@@ -30,6 +69,11 @@ namespace FerreControl.Desktop.Views
 
             _marcacionApi =
                 new MarcacionAsistenciaApiService();
+
+
+            _ultimasLecturasExitosas =
+                new Dictionary<string, DateTime>(
+                    StringComparer.Ordinal);
 
 
             _reloj =
@@ -42,10 +86,6 @@ namespace FerreControl.Desktop.Views
 
             _reloj.Tick +=
                 Reloj_Tick;
-
-
-            cmbTipoCredencial.SelectedIndex =
-                0;
 
 
             Loaded +=
@@ -71,7 +111,18 @@ namespace FerreControl.Desktop.Views
             _reloj.Start();
 
 
-            txtCodigoMarcaje.Focus();
+            MostrarEstadoEsperando();
+
+
+            Dispatcher.BeginInvoke(
+                () =>
+                {
+                    txtCodigoMarcaje.Focus();
+
+                    Keyboard.Focus(
+                        txtCodigoMarcaje);
+                },
+                DispatcherPriority.Input);
         }
 
 
@@ -115,12 +166,13 @@ namespace FerreControl.Desktop.Views
 
 
         // =====================================================
-        // LECTOR
+        // LECTOR - ENTER
         // =====================================================
 
-        private async void TxtCodigoMarcaje_PreviewKeyDown(
-            object sender,
-            KeyEventArgs e)
+        private async void
+            TxtCodigoMarcaje_PreviewKeyDown(
+                object sender,
+                KeyEventArgs e)
         {
             if (e.Key !=
                 Key.Enter)
@@ -133,16 +185,32 @@ namespace FerreControl.Desktop.Views
                 true;
 
 
-            if (_procesando)
-                return;
-
-
             await RegistrarMarcacionAsync();
         }
 
 
+        // =====================================================
+        // BOTÓN PARA PRUEBAS
+        // =====================================================
+
+        private async void BtnRegistrarCodigo_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            await RegistrarMarcacionAsync();
+        }
+
+
+        // =====================================================
+        // REGISTRAR MARCACIÓN
+        // =====================================================
+
         private async Task RegistrarMarcacionAsync()
         {
+            if (_procesando)
+                return;
+
+
             var codigo =
                 txtCodigoMarcaje.Text
                     .Trim();
@@ -151,30 +219,36 @@ namespace FerreControl.Desktop.Views
             if (string.IsNullOrWhiteSpace(
                 codigo))
             {
-                txtEstadoMarcaje.Text =
-                    "No se recibió ningún código.";
+                MostrarEstadoError(
+                    "No se recibió ningún código de credencial.");
 
 
-                txtCodigoMarcaje.Focus();
+                RecuperarFoco();
 
                 return;
             }
 
 
-            if (cmbTipoCredencial.SelectedItem
-                is not ComboBoxItem item)
+            // =================================================
+            // PROTECCIÓN CONTRA DOBLE ESCANEO
+            // =================================================
+
+            if (EsLecturaDuplicada(
+                codigo))
             {
-                txtEstadoMarcaje.Text =
-                    "Seleccione el tipo de credencial.";
+                MostrarEstadoAdvertencia(
+                    "La credencial acaba de ser leída. " +
+                    "Espere unos segundos antes de volver a escanearla.");
+
+
+                txtCodigoMarcaje.Text =
+                    string.Empty;
+
+
+                RecuperarFoco();
 
                 return;
             }
-
-
-            string tipoCredencial =
-                item.Tag?.ToString()
-                ??
-                string.Empty;
 
 
             try
@@ -187,25 +261,24 @@ namespace FerreControl.Desktop.Views
                     false;
 
 
-                cmbTipoCredencial.IsEnabled =
+                btnRegistrarCodigo.IsEnabled =
                     false;
 
 
-                txtEstadoMarcaje.Text =
-                    "Procesando marcación...";
+                MostrarEstadoProcesando();
 
 
                 var dto =
                     new RegistrarMarcacionAutomaticaDto
                     {
                         TipoCredencial =
-                            tipoCredencial,
+                            TipoCredencialMarcaje,
 
                         Codigo =
                             codigo,
 
                         Origen =
-                            "FERRECONTROL_DESKTOP"
+                            "FERRECONTROL_CARNET_CODIGO_BARRAS"
                     };
 
 
@@ -215,17 +288,25 @@ namespace FerreControl.Desktop.Views
                             dto);
 
 
+                // Solo protegemos contra doble lectura
+                // si la API realmente guardó la marcación.
+
+                _ultimasLecturasExitosas[codigo] =
+                    DateTime.Now;
+
+
                 MostrarResultado(
                     resultado);
 
 
-                txtEstadoMarcaje.Text =
-                    $"{FormatearTipo(resultado.TipoMarcacion)} registrada correctamente.";
+                MostrarEstadoExito(
+                    resultado);
             }
             catch (Exception ex)
             {
-                txtEstadoMarcaje.Text =
-                    $"No se pudo registrar: {ex.Message}";
+                MostrarEstadoError(
+                    LimpiarMensajeError(
+                        ex.Message));
             }
             finally
             {
@@ -241,11 +322,66 @@ namespace FerreControl.Desktop.Views
                     true;
 
 
-                cmbTipoCredencial.IsEnabled =
+                btnRegistrarCodigo.IsEnabled =
                     true;
 
 
-                txtCodigoMarcaje.Focus();
+                LimpiarLecturasAntiguas();
+
+
+                RecuperarFoco();
+            }
+        }
+
+
+        // =====================================================
+        // PROTECCIÓN DOBLE ESCANEO
+        // =====================================================
+
+        private bool EsLecturaDuplicada(
+            string codigo)
+        {
+            if (!_ultimasLecturasExitosas
+                .TryGetValue(
+                    codigo,
+                    out var ultimaLectura))
+            {
+                return false;
+            }
+
+
+            return DateTime.Now
+                -
+                ultimaLectura
+                <
+                TiempoProteccionDobleLectura;
+        }
+
+
+        private void LimpiarLecturasAntiguas()
+        {
+            var limite =
+                DateTime.Now
+                    .Subtract(
+                        TimeSpan.FromMinutes(5));
+
+
+            var antiguas =
+                _ultimasLecturasExitosas
+                    .Where(x =>
+                        x.Value <
+                        limite)
+                    .Select(x =>
+                        x.Key)
+                    .ToList();
+
+
+            foreach (var codigo
+                in antiguas)
+            {
+                _ultimasLecturasExitosas
+                    .Remove(
+                        codigo);
             }
         }
 
@@ -284,8 +420,245 @@ namespace FerreControl.Desktop.Views
                 marcacion.FechaHora
                     .ToString(
                         "HH:mm:ss");
+
+
+            panelResultadoMarcaje.Visibility =
+                Visibility.Visible;
+
+
+            txtResultadoMarcaje.Text =
+                ConstruirMensajeResultado(
+                    marcacion);
         }
 
+
+        private static string ConstruirMensajeResultado(
+            MarcacionAsistenciaDto marcacion)
+        {
+            var tipo =
+                FormatearTipo(
+                    marcacion.TipoMarcacion);
+
+
+            return marcacion.TipoMarcacion switch
+            {
+                "ENTRADA" =>
+                    $"✓ Bienvenido. {tipo} registrada correctamente.",
+
+                "INICIO_DESCANSO" =>
+                    "✓ Salida a descanso registrada correctamente.",
+
+                "FIN_DESCANSO" =>
+                    "✓ Regreso de descanso registrado correctamente.",
+
+                "SALIDA" =>
+                    "✓ Salida final registrada correctamente.",
+
+                _ =>
+                    $"✓ {tipo} registrada correctamente."
+            };
+        }
+
+
+        // =====================================================
+        // ESTADOS VISUALES
+        // =====================================================
+
+        private void MostrarEstadoEsperando()
+        {
+            ellEstadoMarcaje.Fill =
+                ObtenerBrush(
+                    "AccentLightBrush");
+
+
+            txtEstadoMarcaje.Foreground =
+                ObtenerBrush(
+                    "TextSecondaryBrush");
+
+
+            txtEstadoMarcaje.Text =
+                "Esperando lectura del carné...";
+        }
+
+
+        private void MostrarEstadoProcesando()
+        {
+            ellEstadoMarcaje.Fill =
+                ObtenerBrush(
+                    "WarningBrush");
+
+
+            txtEstadoMarcaje.Foreground =
+                ObtenerBrush(
+                    "TextSecondaryBrush");
+
+
+            txtEstadoMarcaje.Text =
+                "Validando credencial y registrando marcación...";
+        }
+
+
+        private void MostrarEstadoExito(
+            MarcacionAsistenciaDto resultado)
+        {
+            ellEstadoMarcaje.Fill =
+                ObtenerBrush(
+                    "SuccessBrush");
+
+
+            txtEstadoMarcaje.Foreground =
+                ObtenerBrush(
+                    "SuccessBrush");
+
+
+            txtEstadoMarcaje.Text =
+                $"{FormatearTipo(resultado.TipoMarcacion)} " +
+                $"registrada para {resultado.NombreEmpleado}.";
+        }
+
+
+        private void MostrarEstadoAdvertencia(
+            string mensaje)
+        {
+            ellEstadoMarcaje.Fill =
+                ObtenerBrush(
+                    "WarningBrush");
+
+
+            txtEstadoMarcaje.Foreground =
+                ObtenerBrush(
+                    "WarningBrush");
+
+
+            txtEstadoMarcaje.Text =
+                mensaje;
+        }
+
+
+        private void MostrarEstadoError(
+            string mensaje)
+        {
+            ellEstadoMarcaje.Fill =
+                ObtenerBrush(
+                    "DangerBrush");
+
+
+            txtEstadoMarcaje.Foreground =
+                ObtenerBrush(
+                    "DangerBrush");
+
+
+            txtEstadoMarcaje.Text =
+                mensaje;
+
+
+            panelResultadoMarcaje.Visibility =
+                Visibility.Collapsed;
+        }
+
+
+        private Brush ObtenerBrush(
+            string recurso)
+        {
+            return FindResource(
+                recurso)
+                as Brush
+                ??
+                Brushes.White;
+        }
+
+
+        // =====================================================
+        // FOCO DEL LECTOR
+        // =====================================================
+
+        private void RecuperarFoco()
+        {
+            Dispatcher.BeginInvoke(
+                () =>
+                {
+                    txtCodigoMarcaje.Focus();
+
+                    Keyboard.Focus(
+                        txtCodigoMarcaje);
+
+
+                    txtCodigoMarcaje.CaretIndex =
+                        txtCodigoMarcaje.Text.Length;
+                },
+                DispatcherPriority.Input);
+        }
+
+
+        // =====================================================
+        // MENSAJES DE ERROR
+        // =====================================================
+
+        private static string LimpiarMensajeError(
+            string mensaje)
+        {
+            if (string.IsNullOrWhiteSpace(
+                mensaje))
+            {
+                return
+                    "No se pudo registrar la marcación.";
+            }
+
+
+            var limpio =
+                mensaje
+                    .Trim()
+                    .Trim('"');
+
+
+            /*
+             * Mensajes conocidos del backend.
+             */
+
+            if (limpio.Contains(
+                "Credencial no encontrada o inactiva",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                    "Credencial inválida o desactivada. " +
+                    "Solicite un carné vigente al administrador.";
+            }
+
+
+            if (limpio.Contains(
+                "empleado se encuentra inactivo",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                    "El empleado asociado a este carné se encuentra inactivo.";
+            }
+
+
+            if (limpio.Contains(
+                "jornada del empleado ya fue finalizada",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                    "La jornada de este empleado ya fue finalizada por hoy.";
+            }
+
+
+            if (limpio.Contains(
+                "marcaciones inconsistentes",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                    "La asistencia del empleado necesita revisión administrativa.";
+            }
+
+
+            return limpio;
+        }
+
+
+        // =====================================================
+        // INICIALES
+        // =====================================================
 
         private static string ObtenerIniciales(
             string nombre)
@@ -300,10 +673,12 @@ namespace FerreControl.Desktop.Views
             var partes =
                 nombre.Split(
                     ' ',
-                    StringSplitOptions.RemoveEmptyEntries);
+                    StringSplitOptions
+                        .RemoveEmptyEntries);
 
 
-            if (partes.Length == 1)
+            if (partes.Length ==
+                1)
             {
                 return partes[0]
                     .Substring(
@@ -318,6 +693,10 @@ namespace FerreControl.Desktop.Views
                     .ToUpperInvariant();
         }
 
+
+        // =====================================================
+        // FORMATO TIPO MARCACIÓN
+        // =====================================================
 
         private static string FormatearTipo(
             string tipo)
@@ -342,13 +721,17 @@ namespace FerreControl.Desktop.Views
         }
 
 
+        // =====================================================
+        // FORMATO MÉTODO
+        // =====================================================
+
         private static string FormatearMetodo(
             string metodo)
         {
             return metodo switch
             {
                 "CODIGO_BARRAS" =>
-                    "Código de barras",
+                    "Carné · Código de barras",
 
                 "QR" =>
                     "QR",

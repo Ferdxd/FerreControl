@@ -1,6 +1,5 @@
 using FerreControl.Application.DTOs.Empleados;
 using FerreControl.Application.DTOs.HorasExtra;
-using FerreControl.Application.DTOs.Salarios;
 using FerreControl.Desktop.Models;
 using FerreControl.Desktop.Services;
 using FerreControl.Desktop.Views.Forms;
@@ -40,12 +39,20 @@ namespace FerreControl.Desktop.Views
             _filas =
                 new List<SalarioEmpleadoFila>();
 
-            cmbPeriodicidad.SelectedIndex = 0;
-            cmbEstadoSalario.SelectedIndex = 0;
+            cmbPeriodicidad.SelectedIndex =
+                0;
 
-            Loaded += SalariosView_Loaded;
+            cmbEstadoSalario.SelectedIndex =
+                0;
+
+            Loaded +=
+                SalariosView_Loaded;
         }
 
+
+        // =====================================================
+        // CARGA
+        // =====================================================
 
         private async void SalariosView_Loaded(
             object sender,
@@ -55,27 +62,30 @@ namespace FerreControl.Desktop.Views
         }
 
 
-        // =========================================================
-        // CARGAR
-        // =========================================================
-
-        private async Task CargarSalariosAsync()
+        private async Task CargarSalariosAsync(
+            int? empleadoSeleccionadoId = null)
         {
             try
             {
                 _empleados =
-                    (await _empleadoApi.GetObtenerTodos())
-                    .Where(x => x.NegocioID == NegocioID)
+                    (await _empleadoApi
+                        .GetObtenerTodos())
+                    .Where(x =>
+                        x.NegocioID == NegocioID)
                     .ToList();
+
 
                 _filas.Clear();
 
-                foreach (var empleado in _empleados)
+
+                foreach (var empleado
+                    in _empleados)
                 {
                     var salario =
                         await _salariosApi
                             .ObtenerActualAsync(
                                 empleado.ID);
+
 
                     _filas.Add(
                         new SalarioEmpleadoFila
@@ -96,7 +106,9 @@ namespace FerreControl.Desktop.Views
                                 salario?.Monto,
 
                             Periodicidad =
-                                salario?.Periodicidad ?? "",
+                                salario?.Periodicidad
+                                ??
+                                string.Empty,
 
                             FechaInicio =
                                 salario?.FechaInicio,
@@ -109,10 +121,26 @@ namespace FerreControl.Desktop.Views
                         });
                 }
 
+
                 ActualizarIndicadores();
 
                 AplicarFiltros();
-                LimpiarDetalle();
+
+
+                if (empleadoSeleccionadoId.HasValue)
+                {
+                    dgSalarios.SelectedItem =
+                        dgSalarios.Items
+                            .Cast<SalarioEmpleadoFila>()
+                            .FirstOrDefault(
+                                x =>
+                                    x.EmpleadoID ==
+                                    empleadoSeleccionadoId.Value);
+                }
+                else
+                {
+                    LimpiarDetalle();
+                }
             }
             catch (Exception ex)
             {
@@ -125,72 +153,89 @@ namespace FerreControl.Desktop.Views
         }
 
 
-        // =========================================================
+        // =====================================================
         // INDICADORES
-        // =========================================================
+        // =====================================================
 
         private void ActualizarIndicadores()
         {
             var conSalario =
-                _filas.Where(x =>
-                    x.TieneSalario).ToList();
+                _filas
+                    .Where(x =>
+                        x.TieneSalario)
+                    .ToList();
+
 
             txtEmpleadosConSalario.Text =
-                conSalario.Count.ToString();
+                conSalario.Count
+                    .ToString();
+
 
             txtEmpleadosSinSalario.Text =
-                _filas.Count(x =>
-                    !x.TieneSalario)
-                .ToString();
+                _filas
+                    .Count(x =>
+                        !x.TieneSalario)
+                    .ToString();
+
 
             txtSalarioPromedio.Text =
                 conSalario.Any()
-                    ? $"Q {conSalario.Average(x => x.Monto ?? 0):N2}"
-                    : "Q 0.00";
+                    ?
+                    $"Q {conSalario.Average(x => x.Monto ?? 0):N2}"
+                    :
+                    "Q 0.00";
         }
 
 
-        // =========================================================
+        // =====================================================
         // FILTROS
-        // =========================================================
+        // =====================================================
 
         private void AplicarFiltros()
         {
-            IEnumerable<SalarioEmpleadoFila> resultado =
-                _filas;
+            IEnumerable<SalarioEmpleadoFila>
+                resultado =
+                    _filas;
+
 
             var texto =
                 txtBuscarSalario.Text
-                    .Trim()
-                    .ToLower();
+                    .Trim();
 
-            if (!string.IsNullOrWhiteSpace(texto))
+
+            if (!string.IsNullOrWhiteSpace(
+                texto))
             {
                 resultado =
                     resultado.Where(x =>
-                        x.CodigoEmpleado
-                            .ToLower()
-                            .Contains(texto)
-
+                        x.CodigoEmpleado.Contains(
+                            texto,
+                            StringComparison.OrdinalIgnoreCase)
                         ||
-
-                        x.NombreEmpleado
-                            .ToLower()
-                            .Contains(texto)
-
+                        x.NombreEmpleado.Contains(
+                            texto,
+                            StringComparison.OrdinalIgnoreCase)
                         ||
-
-                        (x.Puesto ?? "")
-                            .ToLower()
-                            .Contains(texto));
+                        (
+                            x.Puesto
+                            ??
+                            string.Empty
+                        ).Contains(
+                            texto,
+                            StringComparison.OrdinalIgnoreCase));
             }
 
-            if (cmbPeriodicidad.SelectedIndex > 0)
+
+            if (cmbPeriodicidad.SelectedIndex >
+                0)
             {
                 var periodicidad =
-                    ((ComboBoxItem)
-                        cmbPeriodicidad.SelectedItem)
-                    .Content.ToString();
+                    (
+                        cmbPeriodicidad.SelectedItem
+                        as ComboBoxItem
+                    )?.Content?
+                    .ToString();
+
 
                 resultado =
                     resultado.Where(x =>
@@ -200,19 +245,23 @@ namespace FerreControl.Desktop.Views
                             StringComparison.OrdinalIgnoreCase));
             }
 
-            if (cmbEstadoSalario.SelectedIndex == 1)
+
+            if (cmbEstadoSalario.SelectedIndex ==
+                1)
             {
                 resultado =
                     resultado.Where(x =>
                         x.TieneSalario);
             }
             else if (
-                cmbEstadoSalario.SelectedIndex == 2)
+                cmbEstadoSalario.SelectedIndex ==
+                2)
             {
                 resultado =
                     resultado.Where(x =>
                         !x.TieneSalario);
             }
+
 
             dgSalarios.ItemsSource =
                 resultado.ToList();
@@ -226,6 +275,7 @@ namespace FerreControl.Desktop.Views
             if (!IsLoaded)
                 return;
 
+
             AplicarFiltros();
         }
 
@@ -237,13 +287,14 @@ namespace FerreControl.Desktop.Views
             if (!IsLoaded)
                 return;
 
+
             AplicarFiltros();
         }
 
 
-        // =========================================================
-        // SELECCIÓN
-        // =========================================================
+        // =====================================================
+        // SELECCIÓN EMPLEADO
+        // =====================================================
 
         private async void DgSalarios_SelectionChanged(
             object sender,
@@ -253,24 +304,33 @@ namespace FerreControl.Desktop.Views
                 is not SalarioEmpleadoFila fila)
             {
                 LimpiarDetalle();
+
                 return;
             }
 
+
             txtEmpleadoSalario.Text =
                 fila.NombreEmpleado;
+
 
             if (fila.TieneSalario)
             {
                 txtSalarioActual.Text =
                     $"Q {fila.Monto:N2}";
 
+
                 txtPeriodicidadActual.Text =
                     fila.Periodicidad;
 
+
+
                 txtFechaInicioSalario.Text =
                     fila.FechaInicio?
-                        .ToString("dd/MM/yyyy")
-                    ?? "--";
+                        .ToString(
+                            "dd/MM/yyyy")
+                    ??
+                    "--";
+
 
                 btnCambiarSalario.Content =
                     "Cambiar salario";
@@ -280,33 +340,40 @@ namespace FerreControl.Desktop.Views
                 txtSalarioActual.Text =
                     "Sin salario";
 
+
                 txtPeriodicidadActual.Text =
                     "--";
 
+
                 txtFechaInicioSalario.Text =
                     "--";
+
 
                 btnCambiarSalario.Content =
                     "Registrar salario";
             }
 
+
             btnCambiarSalario.IsEnabled =
                 fila.EmpleadoActivo;
+
 
             btnConfigurarHoraExtra.IsEnabled =
                 fila.EmpleadoActivo;
 
+
             await Task.WhenAll(
                 CargarHistorialAsync(
                     fila.EmpleadoID),
+
                 CargarHoraExtraActualAsync(
                     fila.EmpleadoID));
         }
 
 
-        // =========================================================
-        // HISTORIAL SALARIO
-        // =========================================================
+        // =====================================================
+        // HISTORIAL SALARIOS
+        // =====================================================
 
         private async Task CargarHistorialAsync(
             int empleadoId)
@@ -318,26 +385,25 @@ namespace FerreControl.Desktop.Views
                         .ObtenerHistorialAsync(
                             empleadoId);
 
+
                 dgHistorialSalarios.ItemsSource =
                     historial
                         .OrderByDescending(
-                            x => x.FechaInicio)
+                            x =>
+                                x.FechaInicio)
                         .ToList();
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show(
-                    $"No se pudo cargar el historial.\n\n{ex.Message}",
-                    "FerreControl",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                dgHistorialSalarios.ItemsSource =
+                    null;
             }
         }
 
 
-        // =========================================================
-        // CONFIGURACIÓN ACTUAL DE HORAS EXTRA
-        // =========================================================
+        // =====================================================
+        // CONFIGURACIÓN ACTUAL HORAS EXTRA
+        // =====================================================
 
         private async Task CargarHoraExtraActualAsync(
             int empleadoId)
@@ -349,82 +415,100 @@ namespace FerreControl.Desktop.Views
                         .ObtenerActualAsync(
                             empleadoId);
 
+
                 MostrarHoraExtraActual(
                     configuracion);
             }
             catch (Exception ex)
             {
                 txtEstadoHoraExtra.Text =
-                    "Error";
+                    "ERROR";
+
 
                 txtEstadoHoraExtra.Foreground =
-                    FindResource("DangerBrush")
+                    FindResource(
+                        "DangerBrush")
                     as System.Windows.Media.Brush;
+
 
                 txtReglaHoraExtra.Text =
                     "No se pudo consultar";
 
+
                 txtTarifaHoraExtra.Text =
                     "--";
+
 
                 txtFechaHoraExtra.Text =
                     "--";
 
-                MessageBox.Show(
-                    $"No se pudo consultar la configuración de horas extra.\n\n{ex.Message}",
-                    "FerreControl",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+
+                System.Diagnostics.Debug.WriteLine(
+                    $"Horas extra: {ex}");
             }
         }
 
 
         private void MostrarHoraExtraActual(
-            EmpleadoReglaHoraExtraDto? configuracion)
+            EmpleadoReglaHoraExtraDto?
+                configuracion)
         {
             if (configuracion == null)
             {
                 txtEstadoHoraExtra.Text =
                     "NO HABILITADO";
 
+
                 txtEstadoHoraExtra.Foreground =
-                    FindResource("TextSecondaryBrush")
+                    FindResource(
+                        "TextSecondaryBrush")
                     as System.Windows.Media.Brush;
+
 
                 txtReglaHoraExtra.Text =
                     "Sin configuración activa";
 
+
                 txtTarifaHoraExtra.Text =
                     "--";
+
 
                 txtFechaHoraExtra.Text =
                     "--";
 
+
                 return;
             }
+
 
             txtEstadoHoraExtra.Text =
                 "HABILITADO";
 
+
             txtEstadoHoraExtra.Foreground =
-                FindResource("SuccessBrush")
+                FindResource(
+                    "SuccessBrush")
                 as System.Windows.Media.Brush;
+
 
             txtReglaHoraExtra.Text =
                 configuracion.ReglaNombre;
 
+
             txtTarifaHoraExtra.Text =
                 $"Q {configuracion.TarifaHora:N2}/h";
 
+
             txtFechaHoraExtra.Text =
                 configuracion.FechaInicio
-                    .ToString("dd/MM/yyyy");
+                    .ToString(
+                        "dd/MM/yyyy");
         }
 
 
-        // =========================================================
-        // REGISTRAR DESDE CABECERA
-        // =========================================================
+        // =====================================================
+        // REGISTRAR SALARIO
+        // =====================================================
 
         private async void BtnRegistrarSalario_Click(
             object sender,
@@ -432,27 +516,45 @@ namespace FerreControl.Desktop.Views
         {
             var empleadosActivos =
                 _empleados
-                    .Where(x => x.Estado)
+                    .Where(x =>
+                        x.Estado)
                     .ToList();
+
+
+            if (empleadosActivos.Count ==
+                0)
+            {
+                MessageBox.Show(
+                    "No existen empleados activos.",
+                    "FerreControl",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                return;
+            }
+
 
             var ventana =
                 new SalarioFormWindow(
                     _salariosApi,
-                    empleadosActivos);
+                    empleadosActivos)
+                {
+                    Owner =
+                        Window.GetWindow(this)
+                };
 
-            ventana.Owner =
-                Window.GetWindow(this);
 
-            if (ventana.ShowDialog() == true)
+            if (ventana.ShowDialog() ==
+                true)
             {
                 await CargarSalariosAsync();
             }
         }
 
 
-        // =========================================================
-        // REGISTRAR / CAMBIAR SALARIO
-        // =========================================================
+        // =====================================================
+        // CAMBIAR SALARIO
+        // =====================================================
 
         private async void BtnCambiarSalario_Click(
             object sender,
@@ -461,13 +563,35 @@ namespace FerreControl.Desktop.Views
             if (dgSalarios.SelectedItem
                 is not SalarioEmpleadoFila fila)
             {
+                MessageBox.Show(
+                    "Seleccione un empleado.",
+                    "FerreControl",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
                 return;
             }
 
+
             var empleado =
-                _empleados.First(
-                    x => x.ID ==
-                         fila.EmpleadoID);
+                _empleados
+                    .FirstOrDefault(
+                        x =>
+                            x.ID ==
+                            fila.EmpleadoID);
+
+
+            if (empleado == null)
+            {
+                MessageBox.Show(
+                    "No se encontró el empleado seleccionado.",
+                    "FerreControl",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
 
             var ventana =
                 new SalarioFormWindow(
@@ -476,98 +600,205 @@ namespace FerreControl.Desktop.Views
                     {
                         empleado
                     },
-                    empleado.ID);
+                    empleado.ID)
+                {
+                    Owner =
+                        Window.GetWindow(this)
+                };
 
-            ventana.Owner =
-                Window.GetWindow(this);
 
-            if (ventana.ShowDialog() == true)
+            if (ventana.ShowDialog() ==
+                true)
             {
-                await CargarSalariosAsync();
+                await CargarSalariosAsync(
+                    empleado.ID);
             }
         }
 
 
-        // =========================================================
+        // =====================================================
         // CONFIGURAR HORAS EXTRA
-        // =========================================================
+        // =====================================================
 
         private async void BtnConfigurarHoraExtra_Click(
             object sender,
             RoutedEventArgs e)
         {
-            if (dgSalarios.SelectedItem
-                is not SalarioEmpleadoFila fila)
+            try
             {
-                return;
-            }
+                /*
+                 * No dependemos únicamente de SelectedItem.
+                 * También comprobamos que exista un empleado
+                 * realmente cargado.
+                 */
 
-            var empleado =
-                _empleados.FirstOrDefault(x =>
-                    x.ID == fila.EmpleadoID);
-
-            if (empleado == null)
-                return;
-
-            var ventana =
-                new ConfigurarHoraExtraEmpleadoWindow(
-                    empleado,
-                    NegocioID)
+                if (dgSalarios.SelectedItem
+                    is not SalarioEmpleadoFila fila)
                 {
-                    Owner = Window.GetWindow(this)
-                };
+                    MessageBox.Show(
+                        "Seleccione primero un empleado.",
+                        "FerreControl",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
 
-            if (ventana.ShowDialog() == true
-                && ventana.HuboCambios)
+                    return;
+                }
+
+
+                var empleado =
+                    _empleados
+                        .FirstOrDefault(
+                            x =>
+                                x.ID ==
+                                fila.EmpleadoID);
+
+
+                if (empleado == null)
+                {
+                    MessageBox.Show(
+                        "No se encontró el empleado seleccionado.",
+                        "FerreControl",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+                    return;
+                }
+
+
+                if (!empleado.Estado)
+                {
+                    MessageBox.Show(
+                        "El empleado está inactivo y no puede configurarse para horas extra.",
+                        "FerreControl",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    return;
+                }
+
+
+                /*
+                 * Construimos la ventana dentro del try.
+                 * Si InitializeComponent() o cualquier recurso
+                 * XAML falla, veremos el error real.
+                 */
+
+                var ventana =
+                    new ConfigurarHoraExtraEmpleadoWindow(
+                        empleado,
+                        empleado.NegocioID);
+
+
+                var owner =
+                    Window.GetWindow(this);
+
+
+                if (owner != null)
+                {
+                    ventana.Owner =
+                        owner;
+                }
+
+
+                ventana.WindowStartupLocation =
+                    owner != null
+                        ?
+                        WindowStartupLocation.CenterOwner
+                        :
+                        WindowStartupLocation.CenterScreen;
+
+
+                ventana.ShowActivated =
+                    true;
+
+
+                /*
+                 * ShowDialog mantiene Salarios detrás y evita
+                 * que se abra más de una configuración a la vez.
+                 */
+
+                var resultado =
+                    ventana.ShowDialog();
+
+
+                if (resultado == true
+                    &&
+                    ventana.HuboCambios)
+                {
+                    await CargarHoraExtraActualAsync(
+                        empleado.ID);
+                }
+            }
+            catch (Exception ex)
             {
-                await CargarHoraExtraActualAsync(
-                    empleado.ID);
+                MessageBox.Show(
+                    "No se pudo abrir la configuración de horas extra.\n\n" +
+                    ex.Message +
+                    "\n\n" +
+                    "Tipo: " +
+                    ex.GetType().Name,
+                    "FerreControl",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
 
-        // =========================================================
+        // =====================================================
         // LIMPIAR
-        // =========================================================
+        // =====================================================
 
         private void LimpiarDetalle()
         {
             txtEmpleadoSalario.Text =
                 "Selecciona un empleado";
 
+
             txtSalarioActual.Text =
                 "--";
+
 
             txtPeriodicidadActual.Text =
                 "--";
 
+
             txtFechaInicioSalario.Text =
                 "--";
+
 
             btnCambiarSalario.Content =
                 "Registrar salario";
 
+
             btnCambiarSalario.IsEnabled =
                 false;
+
 
             btnConfigurarHoraExtra.IsEnabled =
                 false;
 
+
             txtEstadoHoraExtra.Text =
                 "--";
 
+
             txtEstadoHoraExtra.Foreground =
-                FindResource("TextSecondaryBrush")
+                FindResource(
+                    "TextSecondaryBrush")
                 as System.Windows.Media.Brush;
+
 
             txtReglaHoraExtra.Text =
                 "Sin configuración";
 
+
             txtTarifaHoraExtra.Text =
                 "--";
 
+
             txtFechaHoraExtra.Text =
                 "--";
+
 
             dgHistorialSalarios.ItemsSource =
                 null;

@@ -88,5 +88,10 @@ namespace FerreControl.Desktop
         {
             MostrarVista(new NominaView(), "Nómina");
         }
+
+        private void BtnCarnes_Click(Object sender, RoutedEventArgs e)
+        {
+            MostrarVista(new CarnesView(), "Carnes");
+        }
     }
 }

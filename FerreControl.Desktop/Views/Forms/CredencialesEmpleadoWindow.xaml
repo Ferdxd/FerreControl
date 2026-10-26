@@ -1,0 +1,203 @@
+﻿<Window x:Class="FerreControl.Desktop.Views.Forms.CredencialesEmpleadoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Credenciales del empleado"
+        Width="720"
+        Height="600"
+        MinWidth="650"
+        MinHeight="520"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid Margin="28">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel>
+
+            <TextBlock
+                Text="Credenciales del empleado"
+                Style="{StaticResource PageTitleStyle}"/>
+
+            <TextBlock
+                x:Name="txtEmpleado"
+                Text="--"
+                Foreground="{StaticResource TextSecondaryBrush}"
+                Margin="0,6,0,0"/>
+
+        </StackPanel>
+
+
+        <Grid
+            Grid.Row="1"
+            Margin="0,22,0,20">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <Border
+                Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Text="Credenciales registradas"
+                        Style="{StaticResource SectionTitleStyle}"
+                        Margin="0,0,0,12"/>
+
+                    <DataGrid
+                        x:Name="dgCredenciales"
+                        Grid.Row="1"
+                        Style="{StaticResource DarkDataGridStyle}"
+                        IsReadOnly="True"
+                        AutoGenerateColumns="False"
+                        SelectionMode="Single"
+                        SelectionChanged="DgCredenciales_SelectionChanged">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn
+                                Header="Tipo"
+                                Binding="{Binding TipoCredencial}"
+                                Width="150"/>
+
+                            <DataGridTextColumn
+                                Header="Código"
+                                Binding="{Binding Codigo}"
+                                Width="*"/>
+
+                            <DataGridCheckBoxColumn
+                                Header="Activa"
+                                Binding="{Binding Estado}"
+                                Width="80"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                </Grid>
+
+            </Border>
+
+
+            <Border
+                Grid.Row="1"
+                Style="{StaticResource CardStyle}"
+                Margin="0,16,0,0">
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <StackPanel>
+
+                        <TextBlock
+                            Text="TIPO"
+                            Foreground="#64748B"
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Margin="0,0,0,6"/>
+
+                        <ComboBox
+                            x:Name="cmbTipo"
+                            Style="{StaticResource ModernComboBoxStyle}">
+
+                            <ComboBoxItem
+                                Content="QR"
+                                Tag="QR"/>
+
+                            <ComboBoxItem
+                                Content="RFID"
+                                Tag="RFID"/>
+
+                            <ComboBoxItem
+                                Content="Huella / identificador"
+                                Tag="HUELLA"/>
+
+                        </ComboBox>
+
+                    </StackPanel>
+
+
+                    <StackPanel
+                        Grid.Column="2">
+
+                        <TextBlock
+                            Text="IDENTIFICADOR / CÓDIGO"
+                            Foreground="#64748B"
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Margin="0,0,0,6"/>
+
+                        <TextBox
+                            x:Name="txtCodigo"
+                            Style="{StaticResource ModernTextBoxStyle}"
+                            MaxLength="150"/>
+
+                    </StackPanel>
+
+
+                    <Button
+                        Grid.Column="4"
+                        Content="Agregar"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        VerticalAlignment="Bottom"
+                        Height="38"
+                        Click="BtnAgregar_Click"/>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+
+        <Grid Grid.Row="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Button
+                x:Name="btnCambiarEstado"
+                Content="Cambiar estado"
+                Style="{StaticResource SecondaryButtonStyle}"
+                IsEnabled="False"
+                Click="BtnCambiarEstado_Click"/>
+
+
+            <Button
+                Grid.Column="2"
+                Content="Cerrar"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Width="120"
+                Click="BtnCerrar_Click"/>
+
+        </Grid>
+
+    </Grid>
+
+</Window>
